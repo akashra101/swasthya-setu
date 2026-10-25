@@ -116,13 +116,17 @@ function renderMedicines(query = '') {
     if(!container) return;
 
     const lowerQuery = query.toLowerCase();
-    const filtered = medicinesData.filter(m => 
+    const filtered = medicinesData.filter(m => {
+        const localized = getLocalizedMedicine(m);
+        return localized.name.toLowerCase().includes(lowerQuery) ||
+        localized.category.toLowerCase().includes(lowerQuery) ||
+        localized.brand.toLowerCase().includes(lowerQuery) ||
         m.name.toLowerCase().includes(lowerQuery) || 
         m.category.toLowerCase().includes(lowerQuery) ||
         m.brand.toLowerCase().includes(lowerQuery) ||
         m.keywords.toLowerCase().includes(lowerQuery) ||
-        query === ''
-    );
+        query === '';
+    });
 
     const dictionary = translations[currentLanguage];
     document.getElementById('result-query-text').innerText = query
@@ -145,10 +149,10 @@ function renderMedicines(query = '') {
                 <div class="med-icon"><i class="fa-solid fa-pills"></i></div>
                 <div>
                     <div class="med-title-row">
-                        <h3>${translateMedicineName(med.name)}</h3>
+                        <h3>${getLocalizedMedicine(med).name}</h3>
                         <span class="save-badge">${dictionary.saveUpToShort} ${med.save}</span>
                     </div>
-                    <p class="med-cat">${med.category} • Branded: <span style="color: #0f766e; font-weight:500;">${med.brand}</span></p>
+                    <p class="med-cat">${getLocalizedMedicine(med).category} • ${dictionary.brandedLabel}: <span style="color: #0f766e; font-weight:500;">${getLocalizedMedicine(med).brand}</span></p>
                     
                     <div class="price-breakdown">
                         <div><small>${dictionary.englishBranded}</small><p>₹${med.eng} <span class="subtext">(10 ${dictionary.tabs})</span></p></div>
@@ -194,20 +198,21 @@ function requestUserGPSLocation() {
 
                 if(storeContainer) {
                     storeContainer.innerHTML = sortedStores.map(store => `
+                        ${(() => { const localizedStore = getLocalizedStore(store); return `
                         <div class="store-card">
                             <div class="med-info">
                                 <div class="med-icon" style="background:#f0fdfa; color:#0d9488;"><i class="fa-solid fa-location-dot"></i></div>
                                 <div>
-                                    <h3>${store.name}</h3>
-                                    <p class="med-cat"><i class="fa-solid fa-map-pin"></i> ${store.address}</p>
-                                    <p class="time-text"><i class="fa-regular fa-clock"></i> ${store.timing}</p>
+                                    <h3>${localizedStore.name}</h3>
+                                    <p class="med-cat"><i class="fa-solid fa-map-pin"></i> ${localizedStore.address}</p>
+                                        <p class="time-text"><i class="fa-regular fa-clock"></i> ${localizedStore.timing}</p>
                                 </div>
                             </div>
                             <div class="store-right">
                                 <span class="distance-tag">${store.distText}</span>
-                                <a href="${store.mapsUrl}" target="_blank" class="primary-btn sm"><i class="fa-solid fa-location-arrow"></i> Directions</a>
+                                <a href="${store.mapsUrl}" target="_blank" class="primary-btn sm"><i class="fa-solid fa-location-arrow"></i> ${translations[currentLanguage].directions}</a>
                             </div>
-                        </div>
+                        </div>`; })()}
                     `).join('');
                 }
             },
@@ -231,20 +236,21 @@ function loadDefaultStoresFallback() {
 
     if(storeContainer) {
         storeContainer.innerHTML = defaultStores.map(store => `
+            ${(() => { const localizedStore = getLocalizedStore(store); return `
             <div class="store-card">
                 <div class="med-info">
                     <div class="med-icon" style="background:#f0fdfa; color:#0d9488;"><i class="fa-solid fa-location-dot"></i></div>
                     <div>
-                        <h3>${store.name}</h3>
-                        <p class="med-cat"><i class="fa-solid fa-map-pin"></i> ${store.address}</p>
-                        <p class="time-text"><i class="fa-regular fa-clock"></i> ${store.timing}</p>
+                        <h3>${localizedStore.name}</h3>
+                        <p class="med-cat"><i class="fa-solid fa-map-pin"></i> ${localizedStore.address}</p>
+                        <p class="time-text"><i class="fa-regular fa-clock"></i> ${localizedStore.timing}</p>
                     </div>
                 </div>
                 <div class="store-right">
                     <span class="distance-tag">${store.distText}</span>
-                    <a href="${store.mapsUrl}" target="_blank" class="primary-btn sm"><i class="fa-solid fa-location-arrow"></i> Directions</a>
+                    <a href="${store.mapsUrl}" target="_blank" class="primary-btn sm"><i class="fa-solid fa-location-arrow"></i> ${translations[currentLanguage].directions}</a>
                 </div>
-            </div>
+            </div>`; })()}
         `).join('');
     }
 }
@@ -258,9 +264,10 @@ let currentDetailMedicine = {
 // Open details page with dynamic data
 function openDetails(name, brand, category, eng, jan, gov, save) {
     currentDetailMedicine = { name, brand, category };
-    const displayName = translateMedicineName(name);
+    const localized = getLocalizedMedicine(currentDetailMedicine);
+    const displayName = localized.name;
     document.getElementById('detail-med-name').innerText = displayName;
-    document.getElementById('detail-med-cat').innerHTML = `${category} • Branded: <span style="color: #0f766e; font-weight:500;">${brand}</span>`;
+    document.getElementById('detail-med-cat').innerHTML = `${localized.category} • ${translations[currentLanguage].brandedLabel}: <span style="color: #0f766e; font-weight:500;">${localized.brand}</span>`;
     document.getElementById('detail-save-pct').innerText = save;
     
     document.getElementById('table-brand-name').innerText = brand;
@@ -285,7 +292,7 @@ const translations = {
         genuineDescription: 'Avoid fake drugs with verified batch & salt tracking.', findNearby: 'Find Nearby', nearbyDescription: 'Jan Aushadhi / Govt Stores near your exact location.',
         safeReliable: 'Safe & Reliable', safeDescription: 'Verified sources and trusted information for patients.', healthQuote: 'Because your health should not be expensive!',
         all: 'All', branded: 'Branded (English)', janAushadhi: 'Jan Aushadhi', government: 'Government', allMedicines: 'All Medicines',
-        showingMedicines: 'Showing medicines', backResults: 'Back to Results', saveByChoosing: 'by choosing Jan Aushadhi / Govt',
+        showingMedicines: 'Showing medicines', brandedLabel: 'Branded', directions: 'Directions', backResults: 'Back to Results', saveByChoosing: 'by choosing Jan Aushadhi / Govt',
         priceComparison: 'Price Comparison', source: 'Source', brandSalt: 'Brand / Salt', pricePerPack: 'Price (per pack)', savings: 'Savings',
         englishBranded: 'English (Branded)', chooseWisely: 'Same medicine. Different prices. Choose wisely!',
         consultDoctor: 'Always consult a doctor or pharmacist before switching medicine.', findNearestStores: 'Find Nearest Stores',
@@ -341,7 +348,7 @@ const translations = {
         identifierRequired: 'ईमेल या फोन नंबर जरूरी है।', identifierInvalid: 'मान्य ईमेल या 10 अंकों का भारतीय फोन नंबर दर्ज करें।',
         passwordShort: 'पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।', passwordsMismatch: 'पासवर्ड मेल नहीं खाते।', accountCreated: 'खाता सफलतापूर्वक बन गया।',
         loginSuccess: 'लॉगिन सफल रहा।', logoutConfirm: 'MedicineCare से लॉगआउट करें?', hi: 'नमस्ते', languageSelector: 'भाषा चुनें', resultsFor: 'परिणाम',
-        allAvailable: 'सभी दवाएं', available: 'उपलब्ध', showing: 'दिखाई जा रही हैं', medicines: 'दवाएं', tabs: 'टैब',
+        allAvailable: 'सभी दवाएं', available: 'उपलब्ध', showing: 'दिखाई जा रही हैं', medicines: 'दवाएं', tabs: 'टैब', brandedLabel: 'ब्रांडेड', directions: 'दिशा-निर्देश',
         viewDetails: 'विवरण देखें', noMedicine: 'कोई दवा या बीमारी नहीं मिली।', trySearching: 'खोजें'
     },
     pa: {
@@ -375,7 +382,7 @@ const translations = {
         identifierRequired: 'ਈਮੇਲ ਜਾਂ ਫੋਨ ਨੰਬਰ ਲਾਜ਼ਮੀ ਹੈ।', identifierInvalid: 'ਸਹੀ ਈਮੇਲ ਜਾਂ 10 ਅੰਕਾਂ ਦਾ ਭਾਰਤੀ ਫੋਨ ਨੰਬਰ ਦਰਜ ਕਰੋ।',
         passwordShort: 'ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।', passwordsMismatch: 'ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ।', accountCreated: 'ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣ ਗਿਆ।',
         loginSuccess: 'ਲੌਗਇਨ ਸਫਲ ਰਿਹਾ।', logoutConfirm: 'MedicineCare ਤੋਂ ਲੌਗਆਉਟ ਕਰਨਾ ਹੈ?', hi: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ', languageSelector: 'ਭਾਸ਼ਾ ਚੁਣੋ', resultsFor: 'ਨਤੀਜੇ',
-        allAvailable: 'ਸਾਰੀਆਂ ਦਵਾਈਆਂ', available: 'ਉਪਲਬਧ', showing: 'ਦਿਖਾਈਆਂ ਜਾ ਰਹੀਆਂ ਹਨ', medicines: 'ਦਵਾਈਆਂ', tabs: 'ਟੈਬ',
+        allAvailable: 'ਸਾਰੀਆਂ ਦਵਾਈਆਂ', available: 'ਉਪਲਬਧ', showing: 'ਦਿਖਾਈਆਂ ਜਾ ਰਹੀਆਂ ਹਨ', medicines: 'ਦਵਾਈਆਂ', tabs: 'ਟੈਬ', brandedLabel: 'ਬ੍ਰਾਂਡਡ', directions: 'ਦਿਸ਼ਾ-ਨਿਰਦੇਸ਼',
         viewDetails: 'ਵੇਰਵੇ ਵੇਖੋ', noMedicine: 'ਕੋਈ ਦਵਾਈ ਜਾਂ ਬਿਮਾਰੀ ਨਹੀਂ ਮਿਲੀ।', trySearching: 'ਖੋਜੋ'
     }
 };
@@ -395,7 +402,9 @@ const localizedMedicineNames = {
         Fluconazole: 'फ्लुकोनाज़ोल', Itraconazole: 'इट्राकोनाज़ोल', Aceclofenac: 'ऐसिक्लोफेनाक', Mefenamic: 'मेफेनामिक',
         Tramadol: 'ट्रामाडोल', Norfloxacin: 'नॉरफ्लॉक्सासिन', Teneligliptin: 'टेनिलिग्लिप्टिन', Voglibose: 'वोग्लिबोज़',
         Atenolol: 'एटेनोलोल', Losartan: 'लोसार्टन', Spironolactone: 'स्पाइरोनोलैक्टोन', Furosemide: 'फ्यूरोसेमाइड',
-        Prednisolone: 'प्रेडनिसोलोन'
+        Prednisolone: 'प्रेडनिसोलोन', Salbutamol: 'सैल्बुटामोल', Ambroxol: 'एम्ब्रोक्सोल', Dicyclomine: 'डाइसाइक्लोमिन',
+        Multivitamin: 'मल्टीविटामिन', Capsules: 'कैप्सूल', Silymarin: 'सिलीमारिन', Ursodeoxycholic: 'उर्सोडिऑक्सिकोलिक',
+        Allopurinol: 'एलोप्यूरिनोल', Febuxostat: 'फेबक्सोस्टैट', Pregabalin: 'प्रेगाबालिन'
     },
     pa: {
         Paracetamol: 'ਪੈਰਾਸੀਟਾਮੋਲ', Ibuprofen: 'ਆਈਬੂਪ੍ਰੋਫੇਨ', Cetirizine: 'ਸੇਟੀਰੀਜ਼ਿਨ', Metformin: 'ਮੈਟਫੋਰਮਿਨ',
@@ -410,7 +419,9 @@ const localizedMedicineNames = {
         Fluconazole: 'ਫਲੂਕੋਨਾਜ਼ੋਲ', Itraconazole: 'ਇਟਰਾਕੋਨਾਜ਼ੋਲ', Aceclofenac: 'ਐਸੀਕਲੋਫੇਨਾਕ', Mefenamic: 'ਮੇਫੇਨਾਮਿਕ',
         Tramadol: 'ਟ੍ਰਾਮਾਡੋਲ', Norfloxacin: 'ਨੌਰਫਲੋਕਸਾਸਿਨ', Teneligliptin: 'ਟੈਨਿਲਿਗਲਿਪਟਿਨ', Voglibose: 'ਵੋਗਲੀਬੋਜ਼',
         Atenolol: 'ਐਟੇਨੋਲੋਲ', Losartan: 'ਲੋਸਾਰਟਨ', Spironolactone: 'ਸਪਾਇਰੋਨੋਲੈਕਟੋਨ', Furosemide: 'ਫਿਊਰੋਸੇਮਾਈਡ',
-        Prednisolone: 'ਪ੍ਰੈਡਨਿਸੋਲੋਨ'
+        Prednisolone: 'ਪ੍ਰੈਡਨਿਸੋਲੋਨ', Salbutamol: 'ਸੈਲਬਿਊਟਾਮੋਲ', Ambroxol: 'ਐਂਬਰੋਕਸੋਲ', Dicyclomine: 'ਡਾਈਸਾਈਕਲੋਮਿਨ',
+        Multivitamin: 'ਮਲਟੀਵਿਟਾਮਿਨ', Capsules: 'ਕੈਪਸੂਲ', Silymarin: 'ਸਿਲੀਮਾਰਿਨ', Ursodeoxycholic: 'ਉਰਸੋਡੀਓਕਸੀਕੋਲਿਕ',
+        Allopurinol: 'ਐਲੋਪਿਊਰੀਨੋਲ', Febuxostat: 'ਫੇਬੂਕਸੋਸਟੈਟ', Pregabalin: 'ਪ੍ਰੈਗਾਬਾਲਿਨ'
     }
 };
 
@@ -421,11 +432,151 @@ function translateMedicineName(name) {
     return name.replace(/[A-Za-z]+/g, word => replacements[word] || word);
 }
 
+const localizedMedicineCategories = {
+    hi: {
+        'Pain Relief / Fever': 'दर्द निवारण / बुखार', 'Pain & Inflammation': 'दर्द और सूजन', 'Allergy / Cold': 'एलर्जी / सर्दी',
+        'Diabetes': 'मधुमेह', 'Antibiotic / Infection': 'एंटीबायोटिक / संक्रमण', 'Antibiotic / Throat': 'एंटीबायोटिक / गला',
+        'Acidity / Gastric': 'एसिडिटी / गैस्ट्रिक', 'Cholesterol / Cardio': 'कोलेस्ट्रॉल / हृदय', 'Blood Pressure': 'रक्तचाप',
+        'Joint & Muscle Pain': 'जोड़ों और मांसपेशियों का दर्द', 'Acidity': 'एसिडिटी', 'Asthma / Allergy': 'अस्थमा / एलर्जी',
+        'Antibiotic': 'एंटीबायोटिक', 'Antibiotic / Acne': 'एंटीबायोटिक / मुंहासे', 'Cholesterol': 'कोलेस्ट्रॉल',
+        'Blood Thinner': 'खून पतला करने वाली दवा', 'Nausea / Vomiting': 'मतली / उल्टी', 'Allergy': 'एलर्जी',
+        'Vitamin / Bones': 'विटामिन / हड्डियां', 'Nerve Health / Vitamins': 'नसों का स्वास्थ्य / विटामिन',
+        'Bones / Supplements': 'हड्डियां / सप्लीमेंट', 'Supplements / Anemia': 'सप्लीमेंट / एनीमिया',
+        'Iron / Anemia': 'आयरन / एनीमिया', 'Thyroid': 'थायरॉइड', 'Antifungal / Skin': 'एंटीफंगल / त्वचा',
+        'Pain Relief': 'दर्द निवारण', 'Period Pain / Cramps': 'मासिक धर्म का दर्द / ऐंठन', 'Severe Pain': 'तेज दर्द',
+        'Stomach Infection': 'पेट का संक्रमण', 'Blood Pressure / Heart': 'रक्तचाप / हृदय', 'Diuretic / BP': 'मूत्रवर्धक / रक्तचाप',
+        'Diuretic / Swelling': 'मूत्रवर्धक / सूजन', 'Steroid / Inflammation': 'स्टेरॉयड / सूजन',
+        'Respiratory / Asthma': 'श्वसन / अस्थमा', 'Cough / Cold': 'खांसी / सर्दी', 'Stomach Pain / Cramps': 'पेट दर्द / ऐंठन',
+        'Daily Wellness / Supplements': 'दैनिक स्वास्थ्य / सप्लीमेंट', 'Liver Care': 'लिवर स्वास्थ्य', 'Liver / Gallbladder': 'लिवर / पित्ताशय',
+        'Uric Acid / Gout': 'यूरिक एसिड / गाउट', 'Nerve Pain': 'नसों का दर्द'
+    },
+    pa: {
+        'Pain Relief / Fever': 'ਦਰਦ ਤੋਂ ਰਾਹਤ / ਬੁਖਾਰ', 'Pain & Inflammation': 'ਦਰਦ ਅਤੇ ਸੋਜ', 'Allergy / Cold': 'ਐਲਰਜੀ / ਜ਼ੁਕਾਮ',
+        'Diabetes': 'ਸ਼ੂਗਰ', 'Antibiotic / Infection': 'ਐਂਟੀਬਾਇਓਟਿਕ / ਇਨਫੈਕਸ਼ਨ', 'Antibiotic / Throat': 'ਐਂਟੀਬਾਇਓਟਿਕ / ਗਲਾ',
+        'Acidity / Gastric': 'ਐਸਿਡਿਟੀ / ਗੈਸਟਰਿਕ', 'Cholesterol / Cardio': 'ਕੋਲੈਸਟ੍ਰੋਲ / ਦਿਲ', 'Blood Pressure': 'ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ',
+        'Joint & Muscle Pain': 'ਜੋੜਾਂ ਅਤੇ ਮਾਸਪੇਸ਼ੀਆਂ ਦਾ ਦਰਦ', 'Acidity': 'ਐਸਿਡਿਟੀ', 'Asthma / Allergy': 'ਦਮਾ / ਐਲਰਜੀ',
+        'Antibiotic': 'ਐਂਟੀਬਾਇਓਟਿਕ', 'Antibiotic / Acne': 'ਐਂਟੀਬਾਇਓਟਿਕ / ਮੁਹਾਸੇ', 'Cholesterol': 'ਕੋਲੈਸਟ੍ਰੋਲ',
+        'Blood Thinner': 'ਖੂਨ ਪਤਲਾ ਕਰਨ ਵਾਲੀ ਦਵਾਈ', 'Nausea / Vomiting': 'ਮਤਲੀ / ਉਲਟੀ', 'Allergy': 'ਐਲਰਜੀ',
+        'Vitamin / Bones': 'ਵਿਟਾਮਿਨ / ਹੱਡੀਆਂ', 'Nerve Health / Vitamins': 'ਨਸਾਂ ਦੀ ਸਿਹਤ / ਵਿਟਾਮਿਨ',
+        'Bones / Supplements': 'ਹੱਡੀਆਂ / ਸਪਲੀਮੈਂਟ', 'Supplements / Anemia': 'ਸਪਲੀਮੈਂਟ / ਅਨੀਮੀਆ',
+        'Iron / Anemia': 'ਆਇਰਨ / ਅਨੀਮੀਆ', 'Thyroid': 'ਥਾਇਰਾਇਡ', 'Antifungal / Skin': 'ਐਂਟੀਫੰਗਲ / ਚਮੜੀ',
+        'Pain Relief': 'ਦਰਦ ਤੋਂ ਰਾਹਤ', 'Period Pain / Cramps': 'ਮਾਹਵਾਰੀ ਦਾ ਦਰਦ / ਮਰੋੜ', 'Severe Pain': 'ਤੇਜ਼ ਦਰਦ',
+        'Stomach Infection': 'ਪੇਟ ਦੀ ਇਨਫੈਕਸ਼ਨ', 'Blood Pressure / Heart': 'ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ / ਦਿਲ', 'Diuretic / BP': 'ਮੂਤਰਵਰਧਕ / ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ',
+        'Diuretic / Swelling': 'ਮੂਤਰਵਰਧਕ / ਸੋਜ', 'Steroid / Inflammation': 'ਸਟੀਰੌਇਡ / ਸੋਜ',
+        'Respiratory / Asthma': 'ਸਾਹ ਪ੍ਰਣਾਲੀ / ਦਮਾ', 'Cough / Cold': 'ਖੰਘ / ਜ਼ੁਕਾਮ', 'Stomach Pain / Cramps': 'ਪੇਟ ਦਰਦ / ਮਰੋੜ',
+        'Daily Wellness / Supplements': 'ਰੋਜ਼ਾਨਾ ਸਿਹਤ / ਸਪਲੀਮੈਂਟ', 'Liver Care': 'ਜਿਗਰ ਦੀ ਦੇਖਭਾਲ', 'Liver / Gallbladder': 'ਜਿਗਰ / ਪਿੱਤ ਦੀ ਥੈਲੀ',
+        'Uric Acid / Gout': 'ਯੂਰਿਕ ਐਸਿਡ / ਗਾਊਟ', 'Nerve Pain': 'ਨਸਾਂ ਦਾ ਦਰਦ'
+    }
+};
+
+const localizedBrandNames = {
+    hi: {
+        'Crocin / Dolo 650': 'क्रोसिन / डोलो 650', Brufen: 'ब्रूफेन', 'Alerid / Zyrtec': 'एलेरिड / ज़ीरटेक',
+        'Glucophage / Glycomet': 'ग्लूकोफेज / ग्लाइकोमेट', Augmentin: 'ऑगमेंटिन', 'Azithral / Zithromax': 'एज़िथ्रल / ज़िथ्रोमैक्स',
+        'Pan 40 / Pantocid': 'पैन 40 / पैंटोसिड', 'Storvas / Lipitor': 'स्टोरवास / लिपिटर', 'Amlong / Norvasc': 'एमलॉन्ग / नॉरवास्क',
+        'Telma 40': 'टेल्मा 40', Voveran: 'वोवेरान', Omez: 'ओमेज़', 'Rablet / Pariet': 'रैबलेट / पैरिएट', Xyzal: 'ज़ायज़ल',
+        'Montek LC / Singulair': 'मोंटेक एलसी / सिंगुलैर', Cifran: 'सिफ्रान', 'Taxim-O': 'टैक्सिम-ओ', 'Doxy-1': 'डॉक्सी-1',
+        Amaryl: 'एमरिल', 'Rozavel / Crestor': 'रोज़ावेल / क्रेस्टर', Clopivas: 'क्लोपिवास', 'Ecosprin 75': 'इकोस्प्रिन 75',
+        'Rantac 150': 'रैंटैक 150', Domstal: 'डॉम्स्टल', Emeset: 'एमेसेट', 'Allegra 120': 'एलेग्रा 120',
+        'Uprise-D3': 'अपरीज़-डी3', Nurokind: 'न्यूरोकाइंड', 'Shelcal 500': 'शेल्कल 500', Folvite: 'फोलवाइट',
+        'Orofer XT': 'ओरोफर एक्सटी', 'Eltroxin / Thyronorm': 'एल्ट्रोक्सिन / थायरोनॉर्म', Forcan: 'फोरकैन',
+        Canditral: 'कैंडिट्रल', Hifenac: 'हिफेनाक', 'Meftal-Spas': 'मेफ्टल-स्पास', Contramal: 'कॉन्ट्रामल',
+        'Norflox-TZ': 'नॉरफ्लॉक्स-टीजेड', 'Zita 20': 'ज़िटा 20', Voglibose: 'वोग्लिबोज़', Aten: 'एटेन',
+        Losacar: 'लोसाकार', Aldactone: 'एल्डैक्टोन', Lasix: 'लैसिक्स', Wysolone: 'वायसोलोन', Asthalin: 'एस्थालिन',
+        Mucosolvan: 'म्यूकोसोल्वान', Cyclopam: 'साइक्लोपाम', 'Supradyn / Becadexamin': 'सुप्राडिन / बेकाडेक्सामिन',
+        Silybon: 'सिलीबॉन', Udiliv: 'उडिलिव', Zyloric: 'ज़ाइलोरिक', Feburic: 'फेब्यूरिक', 'Gabapin / Lyrica': 'गैबापिन / लिरिका'
+    },
+    pa: {
+        'Crocin / Dolo 650': 'ਕਰੋਸਿਨ / ਡੋਲੋ 650', Brufen: 'ਬਰੂਫੇਨ', 'Alerid / Zyrtec': 'ਐਲਰਿਡ / ਜ਼ਿਰਟੇਕ',
+        'Glucophage / Glycomet': 'ਗਲੂਕੋਫੇਜ / ਗਲਾਈਕੋਮੇਟ', Augmentin: 'ਔਗਮੈਂਟਿਨ', 'Azithral / Zithromax': 'ਐਜ਼ੀਥਰਲ / ਜ਼ਿਥਰੋਮੈਕਸ',
+        'Pan 40 / Pantocid': 'ਪੈਨ 40 / ਪੈਂਟੋਸਿਡ', 'Storvas / Lipitor': 'ਸਟੋਰਵਾਸ / ਲਿਪਿਟਰ', 'Amlong / Norvasc': 'ਐਮਲੌਂਗ / ਨੋਰਵਾਸਕ',
+        'Telma 40': 'ਟੈਲਮਾ 40', Voveran: 'ਵੋਵੇਰਾਨ', Omez: 'ਓਮੇਜ਼', 'Rablet / Pariet': 'ਰੈਬਲੈਟ / ਪੈਰੀਏਟ', Xyzal: 'ਜ਼ਾਈਜ਼ਲ',
+        'Montek LC / Singulair': 'ਮੋਂਟੇਕ ਐਲਸੀ / ਸਿੰਗੁਲੇਅਰ', Cifran: 'ਸਿਫਰਾਨ', 'Taxim-O': 'ਟੈਕਸਿਮ-ਓ', 'Doxy-1': 'ਡੌਕਸੀ-1',
+        Amaryl: 'ਐਮਰਿਲ', 'Rozavel / Crestor': 'ਰੋਜ਼ਾਵੇਲ / ਕ੍ਰੈਸਟਰ', Clopivas: 'ਕਲੋਪੀਵਾਸ', 'Ecosprin 75': 'ਈਕੋਸਪ੍ਰਿਨ 75',
+        'Rantac 150': 'ਰੈਂਟੈਕ 150', Domstal: 'ਡੌਮਸਟਲ', Emeset: 'ਐਮੇਸੈਟ', 'Allegra 120': 'ਐਲੈਗਰਾ 120',
+        'Uprise-D3': 'ਅਪ੍ਰਾਈਜ਼-ਡੀ3', Nurokind: 'ਨਿਊਰੋਕਾਈਂਡ', 'Shelcal 500': 'ਸ਼ੈਲਕਲ 500', Folvite: 'ਫੋਲਵਾਈਟ',
+        'Orofer XT': 'ਓਰੋਫਰ ਐਕਸਟੀ', 'Eltroxin / Thyronorm': 'ਐਲਟਰੌਕਸਿਨ / ਥਾਇਰੋਨੌਰਮ', Forcan: 'ਫੋਰਕੈਨ',
+        Canditral: 'ਕੈਂਡਿਟਰਲ', Hifenac: 'ਹਾਈਫੇਨਾਕ', 'Meftal-Spas': 'ਮੇਫਟਲ-ਸਪਾਸ', Contramal: 'ਕੌਂਟਰਾਮਲ',
+        'Norflox-TZ': 'ਨੌਰਫਲੌਕਸ-ਟੀਜ਼ੈੱਡ', 'Zita 20': 'ਜ਼ੀਟਾ 20', Voglibose: 'ਵੋਗਲੀਬੋਜ਼', Aten: 'ਐਟੇਨ',
+        Losacar: 'ਲੋਸਾਕਾਰ', Aldactone: 'ਐਲਡੈਕਟੋਨ', Lasix: 'ਲੈਸਿਕਸ', Wysolone: 'ਵਾਈਸੋਲੋਨ', Asthalin: 'ਐਸਥਾਲਿਨ',
+        Mucosolvan: 'ਮਿਊਕੋਸੋਲਵਾਨ', Cyclopam: 'ਸਾਈਕਲੋਪੈਮ', 'Supradyn / Becadexamin': 'ਸੁਪ੍ਰਾਡਿਨ / ਬੇਕਾਡੈਕਸਾਮਿਨ',
+        Silybon: 'ਸਿਲੀਬੋਨ', Udiliv: 'ਯੂਡਿਲਿਵ', Zyloric: 'ਜ਼ਾਈਲੋਰਿਕ', Feburic: 'ਫੇਬਿਊਰਿਕ', 'Gabapin / Lyrica': 'ਗੈਬਾਪਿਨ / ਲਿਰਿਕਾ'
+    }
+};
+
+function translateMedicineNameFor(language, name) {
+    const replacements = localizedMedicineNames[language];
+    if (!replacements) return name;
+    return name.replace(/[A-Za-z]+/g, word => replacements[word] || word);
+}
+
+function getLocalizedMedicine(medicine) {
+    if (!medicine.translations) {
+        medicine.translations = {
+            name: { en: medicine.name, hi: translateMedicineNameFor('hi', medicine.name), pa: translateMedicineNameFor('pa', medicine.name) },
+            category: {
+                en: medicine.category,
+                hi: localizedMedicineCategories.hi[medicine.category] || medicine.category,
+                pa: localizedMedicineCategories.pa[medicine.category] || medicine.category
+            },
+            brand: {
+                en: medicine.brand,
+                hi: localizedBrandNames.hi[medicine.brand] || medicine.brand,
+                pa: localizedBrandNames.pa[medicine.brand] || medicine.brand
+            }
+        };
+    }
+    const localized = medicine.translations;
+    return {
+        name: localized.name[currentLanguage] || localized.name.en,
+        category: localized.category[currentLanguage] || localized.category.en,
+        brand: localized.brand[currentLanguage] || localized.brand.en
+    };
+}
+
+const localizedStoreDetails = {
+    'Jan Aushadhi Kendra': {
+        name: { hi: 'जन औषधि केंद्र', pa: 'ਜਨ ਔਸ਼ਧੀ ਕੇਂਦਰ' },
+        address: { hi: 'फेज़ 7, मोहाली', pa: 'ਫੇਜ਼ 7, ਮੋਹਾਲੀ' }
+    },
+    'Govt Civil Hospital Store': {
+        name: { hi: 'सरकारी सिविल अस्पताल स्टोर', pa: 'ਸਰਕਾਰੀ ਸਿਵਲ ਹਸਪਤਾਲ ਸਟੋਰ' },
+        address: { hi: 'फेज़ 6, मोहाली', pa: 'ਫੇਜ਼ 6, ਮੋਹਾਲੀ' }
+    },
+    'Jan Aushadhi Kendra (Phase 7)': {
+        name: { hi: 'जन औषधि केंद्र (फेज़ 7)', pa: 'ਜਨ ਔਸ਼ਧੀ ਕੇਂਦਰ (ਫੇਜ਼ 7)' },
+        address: { hi: 'फेज़ 7, मोहाली', pa: 'ਫੇਜ਼ 7, ਮੋਹਾਲੀ' }
+    },
+    'Govt Civil Hospital Dispensary': {
+        name: { hi: 'सरकारी सिविल अस्पताल डिस्पेंसरी', pa: 'ਸਰਕਾਰੀ ਸਿਵਲ ਹਸਪਤਾਲ ਡਿਸਪੈਂਸਰੀ' },
+        address: { hi: 'फेज़ 6, मोहाली', pa: 'ਫੇਜ਼ 6, ਮੋਹਾਲੀ' }
+    },
+    'Jan Aushadhi Generic Pharmacy': {
+        name: { hi: 'जन औषधि जेनेरिक फार्मेसी', pa: 'ਜਨ ਔਸ਼ਧੀ ਜੈਨਰਿਕ ਫਾਰਮੇਸੀ' },
+        address: { hi: 'सेक्टर 70, मोहाली', pa: 'ਸੈਕਟਰ 70, ਮੋਹਾਲੀ' }
+    },
+    'District Jan Aushadhi Kendra': {
+        name: { hi: 'जिला जन औषधि केंद्र', pa: 'ਜ਼ਿਲ੍ਹਾ ਜਨ ਔਸ਼ਧੀ ਕੇਂਦਰ' },
+        address: { hi: 'सेक्टर 17, चंडीगढ़', pa: 'ਸੈਕਟਰ 17, ਚੰਡੀਗੜ੍ਹ' }
+    }
+};
+
+function getLocalizedStore(store) {
+    const localized = localizedStoreDetails[store.name];
+    return {
+        name: localized?.name[currentLanguage] || store.name,
+        address: localized?.address[currentLanguage] || store.address,
+        timing: store.timing
+    };
+}
+
 function refreshDetailMedicineName() {
-    const displayName = translateMedicineName(currentDetailMedicine.name);
+    const localized = getLocalizedMedicine(currentDetailMedicine);
+    const displayName = localized.name;
     document.getElementById('detail-med-name').innerText = displayName;
     document.getElementById('table-med-name-1').innerText = displayName;
     document.getElementById('table-med-name-2').innerText = displayName;
+    document.getElementById('detail-med-cat').innerHTML = `${localized.category} • ${translations[currentLanguage].brandedLabel}: <span style="color: #0f766e; font-weight:500;">${localized.brand}</span>`;
 }
 
 let currentLanguage = localStorage.getItem('medicineCareLanguage') || 'en';
@@ -449,6 +600,7 @@ function changeLanguage(language) {
     });
     localStorage.setItem('medicineCareLanguage', language);
     renderMedicines(document.getElementById('search-page-input')?.value.trim() || '');
+    loadDefaultStoresFallback();
     refreshDetailMedicineName();
     updateAuthTrigger();
     if (typeof setAuthMode === 'function') setAuthMode(authMode, true);
