@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedicineCare - Sasti Bhi • Surakshit Bhi</title>
+    <title id="page-title">MedicineCare - Affordable & Safe</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -15,17 +15,25 @@
             <div class="logo-icon"><i class="fa-solid fa-pills"></i></div>
             <div>
                 <h1>MedicineCare</h1>
-                <p>Sasti Bhi • Surakshit Bhi</p>
+                <p id="brand-tagline" data-i18n="brandTagline">Affordable • Safe</p>
             </div>
         </div>
         <nav class="nav-links">
-            <a id="nav-home" class="active" onclick="switchPage('home')">Home</a>
-            <a id="nav-search" onclick="switchPage('search')">Search</a>
-            <a id="nav-stores" onclick="switchPage('stores')">Nearby Stores</a>
-            <a id="nav-safety" onclick="switchPage('safety')">Safety & Info</a>
+            <a id="nav-home" class="active" onclick="switchPage('home')" data-i18n="navHome">Home</a>
+            <a id="nav-search" onclick="switchPage('search')" data-i18n="navSearch">Search</a>
+            <a id="nav-stores" onclick="switchPage('stores')" data-i18n="navStores">Nearby Stores</a>
+            <a id="nav-safety" onclick="switchPage('safety')" data-i18n="navSafety">Safety & Info</a>
         </nav>
+        <label class="language-picker" for="language-selector">
+            <i class="fa-solid fa-language"></i>
+            <select id="language-selector" aria-label="Select language" data-i18n-aria-label="languageSelector" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="pa">ਪੰਜਾਬੀ</option>
+            </select>
+        </label>
         <button class="login-btn" id="auth-trigger" type="button">
-            <i class="fa-regular fa-user"></i> <span id="auth-trigger-label">Login / Sign Up</span>
+            <i class="fa-regular fa-user"></i> <span id="auth-trigger-label" data-i18n="authLogin">Login / Sign Up</span>
         </button>
     </header>
 
@@ -36,49 +44,49 @@
         <section id="page-home" class="page active">
             <div class="hero">
                 <div class="hero-content">
-                    <span class="badge">Same Medicine • Different Prices • Big Savings!</span>
-                    <h2>Sahi Dawa<br>Sahi Daam</h2>
-                    <p>Compare prices of branded, Jan Aushadhi and Government medicines. Save money. Stay safe.</p>
+                    <span class="badge" id="hero-badge" data-i18n="heroBadge">Same Medicine • Different Prices • Big Savings!</span>
+                    <h2 id="hero-title" data-i18n="heroTitle">Right Medicine<br>Right Price</h2>
+                    <p id="hero-description" data-i18n="heroDescription">Compare prices of branded, Jan Aushadhi and Government medicines. Save money. Stay safe.</p>
                     
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="home-search-input" placeholder="Enter disease or medicine (e.g. Fever, Diabetes, Acidity)...">
-                        <button class="search-btn" onclick="executeSearch('home-search-input')">Search</button>
+                        <input type="text" id="home-search-input" data-i18n-placeholder="homeSearchPlaceholder" placeholder="Enter disease or medicine (e.g. Fever, Diabetes, Acidity)...">
+                        <button class="search-btn" id="home-search-button" data-i18n="searchButton" onclick="executeSearch('home-search-input')">Search</button>
                     </div>
                 </div>
                 
                 <div class="hero-card">
                     <div class="hero-card-icon"><i class="fa-solid fa-pills"></i></div>
-                    <h3>Save up to 80%</h3>
-                    <p>Switch to Jan Aushadhi alternatives and cut your monthly medical bills.</p>
+                    <h3 data-i18n="saveUpTo">Save up to 80%</h3>
+                    <p data-i18n="saveDescription">Switch to Jan Aushadhi alternatives and cut your monthly medical bills.</p>
                 </div>
             </div>
 
             <div class="features-grid">
                 <div class="feature-card" onclick="switchPage('search')">
                     <div class="icon-box green"><i class="fa-solid fa-chart-line"></i></div>
-                    <h3>Compare Prices</h3>
-                    <p>Find cheapest option across government & generic stores.</p>
+                    <h3 data-i18n="comparePrices">Compare Prices</h3>
+                    <p data-i18n="compareDescription">Find cheapest option across government & generic stores.</p>
                 </div>
                 <div class="feature-card" onclick="switchPage('safety')">
                     <div class="icon-box purple"><i class="fa-solid fa-shield-halved"></i></div>
-                    <h3>Check Genuine Medicine</h3>
-                    <p>Avoid fake drugs with verified batch & salt tracking.</p>
+                    <h3 data-i18n="genuineMedicine">Check Genuine Medicine</h3>
+                    <p data-i18n="genuineDescription">Avoid fake drugs with verified batch & salt tracking.</p>
                 </div>
                 <div class="feature-card" onclick="switchPage('stores')">
                     <div class="icon-box blue"><i class="fa-solid fa-location-dot"></i></div>
-                    <h3>Find Nearby</h3>
-                    <p>Jan Aushadhi / Govt Stores near your exact location.</p>
+                    <h3 data-i18n="findNearby">Find Nearby</h3>
+                    <p data-i18n="nearbyDescription">Jan Aushadhi / Govt Stores near your exact location.</p>
                 </div>
                 <div class="feature-card" onclick="switchPage('safety')">
                     <div class="icon-box rose"><i class="fa-solid fa-circle-check"></i></div>
-                    <h3>Safe & Reliable</h3>
-                    <p>Verified sources and trusted information for patients.</p>
+                    <h3 data-i18n="safeReliable">Safe & Reliable</h3>
+                    <p data-i18n="safeDescription">Verified sources and trusted information for patients.</p>
                 </div>
             </div>
 
             <div class="quote-banner">
-                <i class="fa-solid fa-heart" style="color: #0d9488;"></i> Because your health should not be expensive!
+                <i class="fa-solid fa-heart" style="color: #0d9488;"></i> <span data-i18n="healthQuote">Because your health should not be expensive!</span>
             </div>
         </section>
 
@@ -87,20 +95,20 @@
             <div class="search-filter-container">
                 <div class="search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-page-input" placeholder="Search by disease, salt or medicine...">
-                    <button class="search-btn" onclick="executeSearch('search-page-input')">Search</button>
+                    <input type="text" id="search-page-input" data-i18n-placeholder="searchPlaceholder" placeholder="Search by disease, salt or medicine...">
+                    <button class="search-btn" data-i18n="searchButton" onclick="executeSearch('search-page-input')">Search</button>
                 </div>
                 <div class="filter-pills">
-                    <button class="pill active">All</button>
-                    <button class="pill">Branded (English)</button>
-                    <button class="pill">Jan Aushadhi</button>
-                    <button class="pill">Government</button>
+                    <button class="pill active" data-i18n="all">All</button>
+                    <button class="pill" data-i18n="branded">Branded (English)</button>
+                    <button class="pill" data-i18n="janAushadhi">Jan Aushadhi</button>
+                    <button class="pill" data-i18n="government">Government</button>
                 </div>
             </div>
 
             <div class="results-header">
-                <span id="result-query-text">All Medicines</span>
-                <span id="result-count" class="result-count">Showing medicines</span>
+                <span id="result-query-text" data-i18n="allMedicines">All Medicines</span>
+                <span id="result-count" class="result-count" data-i18n="showingMedicines">Showing medicines</span>
             </div>
 
             <div class="medicine-list" id="dynamic-medicine-list">
@@ -110,7 +118,7 @@
 
         <!---------------- 3. MEDICINE DETAILS & COMPARISON PAGE ---------------->
         <section id="page-details" class="page">
-            <button class="back-link" onclick="switchPage('search')"><i class="fa-solid fa-arrow-left"></i> Back to Results</button>
+            <button class="back-link" onclick="switchPage('search')"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="backResults">Back to Results</span></button>
             
             <div class="detail-top-card">
                 <div class="med-info">
@@ -122,38 +130,38 @@
                     </div>
                 </div>
                 <div class="big-save-box">
-                    <small>Save up to</small>
+                    <small data-i18n="saveUpToShort">Save up to</small>
                     <h2 id="detail-save-pct">76%</h2>
-                    <small>by choosing Jan Aushadhi / Govt</small>
+                    <small data-i18n="saveByChoosing">by choosing Jan Aushadhi / Govt</small>
                 </div>
             </div>
 
             <div class="comparison-box">
-                <h3>Price Comparison</h3>
+                <h3 data-i18n="priceComparison">Price Comparison</h3>
                 <table>
                     <thead>
                         <tr>
-                            <th>Source</th>
-                            <th>Brand / Salt</th>
-                            <th>Price (per pack)</th>
-                            <th>Savings</th>
+                            <th data-i18n="source">Source</th>
+                            <th data-i18n="brandSalt">Brand / Salt</th>
+                            <th data-i18n="pricePerPack">Price (per pack)</th>
+                            <th data-i18n="savings">Savings</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>English (Branded)</td>
+                            <td data-i18n="englishBranded">English (Branded)</td>
                             <td id="table-brand-name">Standard Brand</td>
                             <td id="table-eng-price">₹42</td>
                             <td>—</td>
                         </tr>
                         <tr class="highlight-row">
-                            <td><strong>Jan Aushadhi</strong></td>
+                            <td><strong data-i18n="janAushadhi">Jan Aushadhi</strong></td>
                             <td id="table-med-name-1">Paracetamol 500</td>
                             <td id="table-jan-price" style="color:#0d9488; font-weight:bold;">₹12</td>
                             <td style="color:#059669; font-weight:bold;">71% less</td>
                         </tr>
                         <tr>
-                            <td><strong>Government</strong></td>
+                            <td><strong data-i18n="government">Government</strong></td>
                             <td id="table-med-name-2">Paracetamol 500</td>
                             <td id="table-gov-price" style="color:#059669; font-weight:bold;">₹10</td>
                             <td style="color:#059669; font-weight:bold;">76% less</td>
@@ -163,11 +171,11 @@
 
                 <div class="notice-strip">
                     <i class="fa-solid fa-circle-check" style="color: #059669;"></i>
-                    <span><strong>Same medicine. Different prices. Choose wisely!</strong> Always consult a doctor or pharmacist before switching medicine.</span>
+                    <span><strong data-i18n="chooseWisely">Same medicine. Different prices. Choose wisely!</strong> <span data-i18n="consultDoctor">Always consult a doctor or pharmacist before switching medicine.</span></span>
                 </div>
 
                 <div class="text-right">
-                    <button class="primary-btn" onclick="switchPage('stores')"><i class="fa-solid fa-location-dot"></i> Find Nearest Stores</button>
+                    <button class="primary-btn" onclick="switchPage('stores')"><i class="fa-solid fa-location-dot"></i> <span data-i18n="findNearestStores">Find Nearest Stores</span></button>
                 </div>
             </div>
         </section>
@@ -176,11 +184,11 @@
         <section id="page-stores" class="page">
             <div class="flex-between">
                 <div>
-                    <h2>Nearest Jan Aushadhi / Government Stores</h2>
-                    <p class="subtext">Use your live GPS location to calculate exact distance.</p>
+                    <h2 data-i18n="nearestStores">Nearest Jan Aushadhi / Government Stores</h2>
+                    <p class="subtext" data-i18n="gpsDescription">Use your live GPS location to calculate exact distance.</p>
                 </div>
                 <div class="location-badge" style="gap: 12px;">
-                    <button class="gps-btn" onclick="requestUserGPSLocation()"><i class="fa-solid fa-location-crosshairs"></i> Use Live GPS Location</button>
+                    <button class="gps-btn" data-i18n="useGps" onclick="requestUserGPSLocation()"><i class="fa-solid fa-location-crosshairs"></i> Use Live GPS Location</button>
                 </div>
             </div>
 
@@ -198,35 +206,35 @@
         <!---------------- 5. SAFETY & VERIFICATION PAGE ---------------->
         <section id="page-safety" class="page">
             <div>
-                <h2>How We Ensure Safe & Genuine Medicine?</h2>
-                <p class="subtext">Your safety is our utmost priority. Learn about our verification process.</p>
+                <h2 data-i18n="safetyTitle">How We Ensure Safe & Genuine Medicine?</h2>
+                <p class="subtext" data-i18n="safetyDescription">Your safety is our utmost priority. Learn about our verification process.</p>
             </div>
 
             <div class="safety-grid">
                 <div class="safety-card">
                     <div class="icon-box green"><i class="fa-solid fa-shield-halved"></i></div>
-                    <h3>Verified Sources</h3>
-                    <p>We show medicines directly from authorized Jan Aushadhi Kendras, Government stores, and trusted pharmaceutical directories.</p>
+                    <h3 data-i18n="verifiedSources">Verified Sources</h3>
+                    <p data-i18n="verifiedDescription">We show medicines directly from authorized Jan Aushadhi Kendras, Government stores, and trusted pharmaceutical directories.</p>
                 </div>
                 <div class="safety-card">
                     <div class="icon-box blue"><i class="fa-solid fa-pills"></i></div>
-                    <h3>Genuine Medicine</h3>
-                    <p>Only government-approved generic equivalents with identical active pharmaceutical ingredients (salts) are recommended.</p>
+                    <h3 data-i18n="genuineMedicine">Genuine Medicine</h3>
+                    <p data-i18n="genuineSafetyDescription">Only government-approved generic equivalents with identical active pharmaceutical ingredients (salts) are recommended.</p>
                 </div>
                 <div class="safety-card">
                     <div class="icon-box purple"><i class="fa-solid fa-user-doctor"></i></div>
-                    <h3>Doctor / Pharmacist Advice</h3>
-                    <p>Always consult a qualified doctor before switching any medicine or starting a new dosage plan.</p>
+                    <h3 data-i18n="doctorAdvice">Doctor / Pharmacist Advice</h3>
+                    <p data-i18n="doctorDescription">Always consult a qualified doctor before switching any medicine or starting a new dosage plan.</p>
                 </div>
                 <div class="safety-card">
                     <div class="icon-box rose"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <h3>Beware of Fake Medicines</h3>
-                    <p>Avoid random unverified online sellers. Always check the batch number, manufacturing date, and physical seal.</p>
+                    <h3 data-i18n="fakeMedicine">Beware of Fake Medicines</h3>
+                    <p data-i18n="fakeDescription">Avoid random unverified online sellers. Always check the batch number, manufacturing date, and physical seal.</p>
                 </div>
             </div>
 
             <div class="quote-banner" style="margin-top: 30px;">
-                <i class="fa-solid fa-heart" style="color: #0d9488;"></i> Your health is precious. Choose safe. Choose verified.
+                <i class="fa-solid fa-heart" style="color: #0d9488;"></i> <span data-i18n="safetyQuote">Your health is precious. Choose safe. Choose verified.</span>
             </div>
         </section>
 
@@ -234,59 +242,59 @@
 
     <!-- FOOTER -->
     <footer>
-        <p>© 2026 MedicineCare. Sasti Bhi • Surakshit Bhi.</p>
+        <p>© 2026 MedicineCare. <span data-i18n="brandTagline">Affordable • Safe</span>.</p>
     </footer>
 
     <!-- AUTH MODAL -->
     <div class="auth-modal" id="auth-modal" aria-hidden="true">
         <div class="auth-backdrop" data-close-auth></div>
         <section class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title">
-            <button class="auth-close" id="auth-close" type="button" aria-label="Close login form">&times;</button>
+            <button class="auth-close" id="auth-close" type="button" aria-label="Close login form" data-i18n-aria-label="closeLogin">&times;</button>
             <div class="auth-heading">
                 <div class="auth-icon"><i class="fa-solid fa-shield-heart"></i></div>
                 <div>
-                    <p class="auth-eyebrow">MedicineCare account</p>
-                    <h2 id="auth-title">Welcome back</h2>
-                    <p id="auth-subtitle">Save medicines and access your health preferences.</p>
+                    <p class="auth-eyebrow" data-i18n="accountLabel">MedicineCare account</p>
+                    <h2 id="auth-title" data-i18n="welcomeBack">Welcome back</h2>
+                    <p id="auth-subtitle" data-i18n="loginSubtitle">Save medicines and access your health preferences.</p>
                 </div>
             </div>
 
             <div class="auth-tabs" role="tablist" aria-label="Account access">
-                <button class="auth-tab active" id="login-tab" type="button" role="tab" aria-selected="true">Login</button>
-                <button class="auth-tab" id="signup-tab" type="button" role="tab" aria-selected="false">Create account</button>
+                <button class="auth-tab active" id="login-tab" type="button" role="tab" aria-selected="true" data-i18n="login">Login</button>
+                <button class="auth-tab" id="signup-tab" type="button" role="tab" aria-selected="false" data-i18n="createAccount">Create account</button>
             </div>
 
             <form id="auth-form" novalidate>
                 <div class="auth-field signup-only" hidden>
-                    <label for="auth-name">Full name</label>
-                    <input id="auth-name" name="name" type="text" autocomplete="name" placeholder="Enter your name">
+                    <label for="auth-name" data-i18n="fullName">Full name</label>
+                    <input id="auth-name" name="name" type="text" autocomplete="name" data-i18n-placeholder="namePlaceholder" placeholder="Enter your name">
                     <small class="field-error" id="auth-name-error"></small>
                 </div>
 
                 <div class="auth-field">
-                    <label for="auth-identifier">Email or phone number</label>
-                    <input id="auth-identifier" name="identifier" type="text" inputmode="email" autocomplete="username" placeholder="you@example.com or 10-digit number">
+                    <label for="auth-identifier" data-i18n="emailOrPhone">Email or phone number</label>
+                    <input id="auth-identifier" name="identifier" type="text" inputmode="email" autocomplete="username" data-i18n-placeholder="identifierPlaceholder" placeholder="you@example.com or 10-digit number">
                     <small class="field-error" id="auth-identifier-error"></small>
                 </div>
 
                 <div class="auth-field">
-                    <label for="auth-password">Password</label>
+                    <label for="auth-password" data-i18n="password">Password</label>
                     <div class="password-wrap">
-                        <input id="auth-password" name="password" type="password" autocomplete="current-password" placeholder="Minimum 6 characters">
-                        <button class="password-toggle" id="password-toggle" type="button" aria-label="Show password"><i class="fa-regular fa-eye"></i></button>
+                        <input id="auth-password" name="password" type="password" autocomplete="current-password" data-i18n-placeholder="passwordPlaceholder" placeholder="Minimum 6 characters">
+                        <button class="password-toggle" id="password-toggle" type="button" aria-label="Show password" data-i18n-aria-label="showPassword"><i class="fa-regular fa-eye"></i></button>
                     </div>
                     <small class="field-error" id="auth-password-error"></small>
                 </div>
 
                 <div class="auth-field signup-only" hidden>
-                    <label for="auth-confirm-password">Confirm password</label>
-                    <input id="auth-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Re-enter your password">
+                    <label for="auth-confirm-password" data-i18n="confirmPassword">Confirm password</label>
+                    <input id="auth-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" data-i18n-placeholder="confirmPasswordPlaceholder" placeholder="Re-enter your password">
                     <small class="field-error" id="auth-confirm-password-error"></small>
                 </div>
 
                 <p class="auth-status" id="auth-status" role="status" aria-live="polite"></p>
-                <button class="auth-submit" id="auth-submit" type="submit">Login securely</button>
-                <p class="auth-note"><i class="fa-solid fa-lock"></i> Your demo session is stored only in this browser.</p>
+                <button class="auth-submit" id="auth-submit" type="submit" data-i18n="loginSecurely">Login securely</button>
+                <p class="auth-note"><i class="fa-solid fa-lock"></i> <span data-i18n="sessionNote">Your demo session is stored only in this browser.</span></p>
             </form>
         </section>
     </div>
