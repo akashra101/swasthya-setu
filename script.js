@@ -124,14 +124,17 @@ function renderMedicines(query = '') {
         query === ''
     );
 
-    document.getElementById('result-query-text').innerText = query ? `Results for "${query}"` : `All Medicines (${medicinesData.length} Available)`;
-    document.getElementById('result-count').innerText = `Showing ${filtered.length} medicines`;
+    const dictionary = translations[currentLanguage];
+    document.getElementById('result-query-text').innerText = query
+        ? `${dictionary.resultsFor} "${query}"`
+        : `${dictionary.allAvailable} (${medicinesData.length} ${dictionary.available})`;
+    document.getElementById('result-count').innerText = `${dictionary.showing} ${filtered.length} ${dictionary.medicines}`;
 
     if(filtered.length === 0) {
         container.innerHTML = `
             <div style="background: white; padding: 40px; border-radius: 16px; text-align: center; color: #64748b; border: 1px solid #e2e8f0;">
-                <p style="font-size: 1.1rem; font-weight: 600;">Koi medicine ya disease nahi mili.</p>
-                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 5px;">Try searching: <strong>Fever, Diabetes, Acidity, BP, Infection, Pain</strong></p>
+                <p style="font-size: 1.1rem; font-weight: 600;">${dictionary.noMedicine}</p>
+                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 5px;">${dictionary.trySearching}: <strong>Fever, Diabetes, Acidity, BP, Infection, Pain</strong></p>
             </div>`;
         return;
     }
@@ -143,18 +146,18 @@ function renderMedicines(query = '') {
                 <div>
                     <div class="med-title-row">
                         <h3>${med.name}</h3>
-                        <span class="save-badge">Save up to ${med.save}</span>
+                        <span class="save-badge">${dictionary.saveUpToShort} ${med.save}</span>
                     </div>
                     <p class="med-cat">${med.category} • Branded: <span style="color: #0f766e; font-weight:500;">${med.brand}</span></p>
                     
                     <div class="price-breakdown">
-                        <div><small>English (Branded)</small><p>₹${med.eng} <span class="subtext">(10 tabs)</span></p></div>
-                        <div><small>Jan Aushadhi</small><p style="color:#0d9488;">₹${med.jan} <span class="subtext">(10 tabs)</span></p></div>
-                        <div><small>Government</small><p style="color:#059669;">₹${med.gov} <span class="subtext">(10 tabs)</span></p></div>
+                        <div><small>${dictionary.englishBranded}</small><p>₹${med.eng} <span class="subtext">(10 ${dictionary.tabs})</span></p></div>
+                        <div><small>${dictionary.janAushadhi}</small><p style="color:#0d9488;">₹${med.jan} <span class="subtext">(10 ${dictionary.tabs})</span></p></div>
+                        <div><small>${dictionary.government}</small><p style="color:#059669;">₹${med.gov} <span class="subtext">(10 ${dictionary.tabs})</span></p></div>
                     </div>
                 </div>
             </div>
-            <button class="view-btn">View Details</button>
+            <button class="view-btn">${dictionary.viewDetails}</button>
         </div>
     `).join('');
 }
@@ -263,6 +266,137 @@ function openDetails(name, brand, category, eng, jan, gov, save) {
     switchPage('details');
 }
 
+const translations = {
+    en: {
+        pageTitle: 'MedicineCare - Affordable & Safe', brandTagline: 'Affordable • Safe', navHome: 'Home', navSearch: 'Search',
+        navStores: 'Nearby Stores', navSafety: 'Safety & Info', authLogin: 'Login / Sign Up', heroBadge: 'Same Medicine • Different Prices • Big Savings!',
+        heroTitle: 'Right Medicine<br>Right Price', heroDescription: 'Compare prices of branded, Jan Aushadhi and Government medicines. Save money. Stay safe.',
+        homeSearchPlaceholder: 'Enter disease or medicine (e.g. Fever, Diabetes, Acidity)...', searchPlaceholder: 'Search by disease, salt or medicine...',
+        searchButton: 'Search', saveUpTo: 'Save up to 80%', saveUpToShort: 'Save up to', saveDescription: 'Switch to Jan Aushadhi alternatives and cut your monthly medical bills.',
+        comparePrices: 'Compare Prices', compareDescription: 'Find cheapest option across government & generic stores.', genuineMedicine: 'Genuine Medicine',
+        genuineDescription: 'Avoid fake drugs with verified batch & salt tracking.', findNearby: 'Find Nearby', nearbyDescription: 'Jan Aushadhi / Govt Stores near your exact location.',
+        safeReliable: 'Safe & Reliable', safeDescription: 'Verified sources and trusted information for patients.', healthQuote: 'Because your health should not be expensive!',
+        all: 'All', branded: 'Branded (English)', janAushadhi: 'Jan Aushadhi', government: 'Government', allMedicines: 'All Medicines',
+        showingMedicines: 'Showing medicines', backResults: 'Back to Results', saveByChoosing: 'by choosing Jan Aushadhi / Govt',
+        priceComparison: 'Price Comparison', source: 'Source', brandSalt: 'Brand / Salt', pricePerPack: 'Price (per pack)', savings: 'Savings',
+        englishBranded: 'English (Branded)', chooseWisely: 'Same medicine. Different prices. Choose wisely!',
+        consultDoctor: 'Always consult a doctor or pharmacist before switching medicine.', findNearestStores: 'Find Nearest Stores',
+        nearestStores: 'Nearest Jan Aushadhi / Government Stores', gpsDescription: 'Use your live GPS location to calculate exact distance.',
+        useGps: 'Use Live GPS Location', safetyTitle: 'How We Ensure Safe & Genuine Medicine?',
+        safetyDescription: 'Your safety is our utmost priority. Learn about our verification process.', verifiedSources: 'Verified Sources',
+        verifiedDescription: 'We show medicines directly from authorized Jan Aushadhi Kendras, Government stores, and trusted pharmaceutical directories.',
+        genuineSafetyDescription: 'Only government-approved generic equivalents with identical active pharmaceutical ingredients (salts) are recommended.',
+        doctorAdvice: 'Doctor / Pharmacist Advice', doctorDescription: 'Always consult a qualified doctor before switching any medicine or starting a new dosage plan.',
+        fakeMedicine: 'Beware of Fake Medicines', fakeDescription: 'Avoid random unverified online sellers. Always check the batch number, manufacturing date, and physical seal.',
+        safetyQuote: 'Your health is precious. Choose safe. Choose verified.', closeLogin: 'Close login form', accountLabel: 'MedicineCare account',
+        welcomeBack: 'Welcome back', loginSubtitle: 'Save medicines and access your health preferences.', login: 'Login',
+        createAccount: 'Create account', fullName: 'Full name', namePlaceholder: 'Enter your name', emailOrPhone: 'Email or phone number',
+        identifierPlaceholder: 'you@example.com or 10-digit number', password: 'Password', passwordPlaceholder: 'Minimum 6 characters',
+        showPassword: 'Show password', hidePassword: 'Hide password', confirmPassword: 'Confirm password',
+        confirmPasswordPlaceholder: 'Re-enter your password', loginSecurely: 'Login securely', sessionNote: 'Your demo session is stored only in this browser.',
+        signupSubtitle: 'Get a simpler way to compare and save on medicines.', createAccountButton: 'Create account',
+        nameRequired: 'Please enter your full name.', identifierRequired: 'Email or phone number is required.',
+        identifierInvalid: 'Enter a valid email or 10-digit Indian phone number.', passwordShort: 'Password must be at least 6 characters.',
+        passwordsMismatch: 'Passwords do not match.', accountCreated: 'Account created successfully.', loginSuccess: 'Login successful.',
+        logoutConfirm: 'Logout from MedicineCare?', hi: 'Hi', languageSelector: 'Select language', resultsFor: 'Results for', allAvailable: 'All Medicines', available: 'Available',
+        showing: 'Showing', medicines: 'medicines', tabs: 'tabs', viewDetails: 'View Details', noMedicine: 'No medicine or disease found.',
+        trySearching: 'Try searching'
+    },
+    hi: {
+        pageTitle: 'MedicineCare - सस्ती और सुरक्षित', brandTagline: 'सस्ती • सुरक्षित', navHome: 'होम', navSearch: 'खोजें',
+        navStores: 'नज़दीकी स्टोर', navSafety: 'सुरक्षा और जानकारी', authLogin: 'लॉगिन / साइन अप', heroBadge: 'एक ही दवा • अलग कीमतें • बड़ी बचत!',
+        heroTitle: 'सही दवा<br>सही दाम', heroDescription: 'ब्रांडेड, जन औषधि और सरकारी दवाओं की कीमतों की तुलना करें। पैसे बचाएं और सुरक्षित रहें।',
+        homeSearchPlaceholder: 'बीमारी या दवा दर्ज करें (जैसे बुखार, मधुमेह, एसिडिटी)...', searchPlaceholder: 'बीमारी, साल्ट या दवा से खोजें...',
+        searchButton: 'खोजें', saveUpTo: '80% तक बचत', saveUpToShort: 'बचत तक', saveDescription: 'जन औषधि के विकल्प चुनें और अपने मासिक मेडिकल खर्च को कम करें।',
+        comparePrices: 'कीमतों की तुलना', compareDescription: 'सरकारी और जेनेरिक स्टोर में सबसे सस्ता विकल्प खोजें।', genuineMedicine: 'असली दवा',
+        genuineDescription: 'सत्यापित बैच और साल्ट ट्रैकिंग से नकली दवाओं से बचें।', findNearby: 'नज़दीकी खोजें', nearbyDescription: 'अपने स्थान के पास जन औषधि / सरकारी स्टोर खोजें।',
+        safeReliable: 'सुरक्षित और भरोसेमंद', safeDescription: 'मरीजों के लिए सत्यापित स्रोत और भरोसेमंद जानकारी।', healthQuote: 'आपका स्वास्थ्य महंगा नहीं होना चाहिए!',
+        all: 'सभी', branded: 'ब्रांडेड (अंग्रेज़ी)', janAushadhi: 'जन औषधि', government: 'सरकारी', allMedicines: 'सभी दवाएं',
+        showingMedicines: 'दवाएं दिखाई जा रही हैं', backResults: 'परिणामों पर वापस', saveByChoosing: 'जन औषधि / सरकारी चुनकर',
+        priceComparison: 'कीमत तुलना', source: 'स्रोत', brandSalt: 'ब्रांड / साल्ट', pricePerPack: 'कीमत (प्रति पैक)', savings: 'बचत',
+        englishBranded: 'अंग्रेज़ी (ब्रांडेड)', chooseWisely: 'एक ही दवा। अलग कीमतें। समझदारी से चुनें!',
+        consultDoctor: 'दवा बदलने से पहले डॉक्टर या फार्मासिस्ट से सलाह लें।', findNearestStores: 'नज़दीकी स्टोर खोजें',
+        nearestStores: 'नज़दीकी जन औषधि / सरकारी स्टोर', gpsDescription: 'सटीक दूरी जानने के लिए अपना लाइव GPS इस्तेमाल करें।',
+        useGps: 'लाइव GPS इस्तेमाल करें', safetyTitle: 'हम सुरक्षित और असली दवा कैसे सुनिश्चित करते हैं?',
+        safetyDescription: 'आपकी सुरक्षा हमारी प्राथमिकता है। हमारी सत्यापन प्रक्रिया जानें।', verifiedSources: 'सत्यापित स्रोत',
+        verifiedDescription: 'हम अधिकृत जन औषधि केंद्रों, सरकारी स्टोर और भरोसेमंद फार्मास्युटिकल निर्देशिकाओं से दवाएं दिखाते हैं।',
+        genuineSafetyDescription: 'केवल समान सक्रिय फार्मास्युटिकल सामग्री (साल्ट) वाले सरकारी-अनुमोदित जेनेरिक विकल्प सुझाए जाते हैं।',
+        doctorAdvice: 'डॉक्टर / फार्मासिस्ट की सलाह', doctorDescription: 'दवा बदलने या नई खुराक शुरू करने से पहले योग्य डॉक्टर से सलाह लें।',
+        fakeMedicine: 'नकली दवाओं से सावधान', fakeDescription: 'असत्यापित ऑनलाइन विक्रेताओं से बचें। बैच नंबर, निर्माण तिथि और सील जरूर जांचें।',
+        safetyQuote: 'आपका स्वास्थ्य अनमोल है। सुरक्षित और सत्यापित विकल्प चुनें।', closeLogin: 'लॉगिन फॉर्म बंद करें', accountLabel: 'MedicineCare खाता',
+        welcomeBack: 'वापसी पर स्वागत है', loginSubtitle: 'दवाएं सेव करें और अपनी स्वास्थ्य प्राथमिकताओं तक पहुंचें।', login: 'लॉगिन',
+        createAccount: 'खाता बनाएं', fullName: 'पूरा नाम', namePlaceholder: 'अपना नाम दर्ज करें', emailOrPhone: 'ईमेल या फोन नंबर',
+        identifierPlaceholder: 'you@example.com या 10 अंकों का नंबर', password: 'पासवर्ड', passwordPlaceholder: 'कम से कम 6 अक्षर',
+        showPassword: 'पासवर्ड दिखाएं', hidePassword: 'पासवर्ड छिपाएं', confirmPassword: 'पासवर्ड की पुष्टि करें',
+        confirmPasswordPlaceholder: 'पासवर्ड फिर से दर्ज करें', loginSecurely: 'सुरक्षित लॉगिन', sessionNote: 'आपका डेमो सेशन केवल इसी ब्राउज़र में सेव है।',
+        signupSubtitle: 'दवाओं की तुलना और बचत का आसान तरीका पाएं।', createAccountButton: 'खाता बनाएं', nameRequired: 'कृपया अपना पूरा नाम दर्ज करें।',
+        identifierRequired: 'ईमेल या फोन नंबर जरूरी है।', identifierInvalid: 'मान्य ईमेल या 10 अंकों का भारतीय फोन नंबर दर्ज करें।',
+        passwordShort: 'पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।', passwordsMismatch: 'पासवर्ड मेल नहीं खाते।', accountCreated: 'खाता सफलतापूर्वक बन गया।',
+        loginSuccess: 'लॉगिन सफल रहा।', logoutConfirm: 'MedicineCare से लॉगआउट करें?', hi: 'नमस्ते', languageSelector: 'भाषा चुनें', resultsFor: 'परिणाम',
+        allAvailable: 'सभी दवाएं', available: 'उपलब्ध', showing: 'दिखाई जा रही हैं', medicines: 'दवाएं', tabs: 'टैब',
+        viewDetails: 'विवरण देखें', noMedicine: 'कोई दवा या बीमारी नहीं मिली।', trySearching: 'खोजें'
+    },
+    pa: {
+        pageTitle: 'MedicineCare - ਸਸਤੀ ਅਤੇ ਸੁਰੱਖਿਅਤ', brandTagline: 'ਸਸਤੀ • ਸੁਰੱਖਿਅਤ', navHome: 'ਹੋਮ', navSearch: 'ਖੋਜ',
+        navStores: 'ਨੇੜਲੇ ਸਟੋਰ', navSafety: 'ਸੁਰੱਖਿਆ ਅਤੇ ਜਾਣਕਾਰੀ', authLogin: 'ਲੌਗਇਨ / ਸਾਈਨ ਅੱਪ', heroBadge: 'ਇੱਕੋ ਦਵਾਈ • ਵੱਖਰੀਆਂ ਕੀਮਤਾਂ • ਵੱਡੀ ਬੱਚਤ!',
+        heroTitle: 'ਸਹੀ ਦਵਾਈ<br>ਸਹੀ ਕੀਮਤ', heroDescription: 'ਬ੍ਰਾਂਡਡ, ਜਨ ਔਸ਼ਧੀ ਅਤੇ ਸਰਕਾਰੀ ਦਵਾਈਆਂ ਦੀਆਂ ਕੀਮਤਾਂ ਦੀ ਤੁਲਨਾ ਕਰੋ। ਪੈਸੇ ਬਚਾਓ ਅਤੇ ਸੁਰੱਖਿਅਤ ਰਹੋ।',
+        homeSearchPlaceholder: 'ਬਿਮਾਰੀ ਜਾਂ ਦਵਾਈ ਦਰਜ ਕਰੋ (ਜਿਵੇਂ ਬੁਖਾਰ, ਸ਼ੂਗਰ, ਐਸਿਡਿਟੀ)...', searchPlaceholder: 'ਬਿਮਾਰੀ, ਸਾਲਟ ਜਾਂ ਦਵਾਈ ਨਾਲ ਖੋਜੋ...',
+        searchButton: 'ਖੋਜੋ', saveUpTo: '80% ਤੱਕ ਬੱਚਤ', saveUpToShort: 'ਬੱਚਤ ਤੱਕ', saveDescription: 'ਜਨ ਔਸ਼ਧੀ ਦੇ ਵਿਕਲਪ ਚੁਣੋ ਅਤੇ ਮਹੀਨਾਵਾਰ ਮੈਡੀਕਲ ਖਰਚ ਘਟਾਓ।',
+        comparePrices: 'ਕੀਮਤਾਂ ਦੀ ਤੁਲਨਾ', compareDescription: 'ਸਰਕਾਰੀ ਅਤੇ ਜੈਨਰਿਕ ਸਟੋਰਾਂ ਵਿੱਚ ਸਭ ਤੋਂ ਸਸਤਾ ਵਿਕਲਪ ਲੱਭੋ।', genuineMedicine: 'ਅਸਲੀ ਦਵਾਈ',
+        genuineDescription: 'ਤਸਦੀਕਸ਼ੁਦਾ ਬੈਚ ਅਤੇ ਸਾਲਟ ਟਰੈਕਿੰਗ ਨਾਲ ਨਕਲੀ ਦਵਾਈਆਂ ਤੋਂ ਬਚੋ।', findNearby: 'ਨੇੜੇ ਲੱਭੋ', nearbyDescription: 'ਆਪਣੀ ਥਾਂ ਦੇ ਨੇੜੇ ਜਨ ਔਸ਼ਧੀ / ਸਰਕਾਰੀ ਸਟੋਰ ਲੱਭੋ।',
+        safeReliable: 'ਸੁਰੱਖਿਅਤ ਅਤੇ ਭਰੋਸੇਯੋਗ', safeDescription: 'ਮਰੀਜ਼ਾਂ ਲਈ ਤਸਦੀਕਸ਼ੁਦਾ ਸਰੋਤ ਅਤੇ ਭਰੋਸੇਯੋਗ ਜਾਣਕਾਰੀ।', healthQuote: 'ਤੁਹਾਡੀ ਸਿਹਤ ਮਹਿੰਗੀ ਨਹੀਂ ਹੋਣੀ ਚਾਹੀਦੀ!',
+        all: 'ਸਾਰੇ', branded: 'ਬ੍ਰਾਂਡਡ (ਅੰਗਰੇਜ਼ੀ)', janAushadhi: 'ਜਨ ਔਸ਼ਧੀ', government: 'ਸਰਕਾਰੀ', allMedicines: 'ਸਾਰੀਆਂ ਦਵਾਈਆਂ',
+        showingMedicines: 'ਦਵਾਈਆਂ ਦਿਖਾਈਆਂ ਜਾ ਰਹੀਆਂ ਹਨ', backResults: 'ਨਤੀਜਿਆਂ ’ਤੇ ਵਾਪਸ', saveByChoosing: 'ਜਨ ਔਸ਼ਧੀ / ਸਰਕਾਰੀ ਚੁਣ ਕੇ',
+        priceComparison: 'ਕੀਮਤ ਦੀ ਤੁਲਨਾ', source: 'ਸਰੋਤ', brandSalt: 'ਬ੍ਰਾਂਡ / ਸਾਲਟ', pricePerPack: 'ਕੀਮਤ (ਪੈਕ ਪ੍ਰਤੀ)', savings: 'ਬੱਚਤ',
+        englishBranded: 'ਅੰਗਰੇਜ਼ੀ (ਬ੍ਰਾਂਡਡ)', chooseWisely: 'ਇੱਕੋ ਦਵਾਈ। ਵੱਖਰੀਆਂ ਕੀਮਤਾਂ। ਸਮਝਦਾਰੀ ਨਾਲ ਚੁਣੋ!',
+        consultDoctor: 'ਦਵਾਈ ਬਦਲਣ ਤੋਂ ਪਹਿਲਾਂ ਡਾਕਟਰ ਜਾਂ ਫਾਰਮਾਸਿਸਟ ਨਾਲ ਸਲਾਹ ਕਰੋ।', findNearestStores: 'ਨੇੜਲੇ ਸਟੋਰ ਲੱਭੋ',
+        nearestStores: 'ਨੇੜਲੇ ਜਨ ਔਸ਼ਧੀ / ਸਰਕਾਰੀ ਸਟੋਰ', gpsDescription: 'ਸਹੀ ਦੂਰੀ ਜਾਣਨ ਲਈ ਲਾਈਵ GPS ਵਰਤੋ।',
+        useGps: 'ਲਾਈਵ GPS ਵਰਤੋ', safetyTitle: 'ਅਸੀਂ ਸੁਰੱਖਿਅਤ ਅਤੇ ਅਸਲੀ ਦਵਾਈ ਕਿਵੇਂ ਯਕੀਨੀ ਬਣਾਉਂਦੇ ਹਾਂ?',
+        safetyDescription: 'ਤੁਹਾਡੀ ਸੁਰੱਖਿਆ ਸਾਡੀ ਪਹਿਲ ਹੈ। ਸਾਡੀ ਤਸਦੀਕ ਪ੍ਰਕਿਰਿਆ ਬਾਰੇ ਜਾਣੋ।', verifiedSources: 'ਤਸਦੀਕਸ਼ੁਦਾ ਸਰੋਤ',
+        verifiedDescription: 'ਅਸੀਂ ਅਧਿਕਾਰਤ ਜਨ ਔਸ਼ਧੀ ਕੇਂਦਰਾਂ, ਸਰਕਾਰੀ ਸਟੋਰਾਂ ਅਤੇ ਭਰੋਸੇਯੋਗ ਫਾਰਮਾਸਿਊਟੀਕਲ ਡਾਇਰੈਕਟਰੀਆਂ ਤੋਂ ਦਵਾਈਆਂ ਦਿਖਾਉਂਦੇ ਹਾਂ।',
+        genuineSafetyDescription: 'ਸਿਰਫ਼ ਇੱਕੋ ਸਰਗਰਮ ਫਾਰਮਾਸਿਊਟੀਕਲ ਸਮੱਗਰੀ (ਸਾਲਟ) ਵਾਲੇ ਸਰਕਾਰੀ ਮਨਜ਼ੂਰਸ਼ੁਦਾ ਜੈਨਰਿਕ ਵਿਕਲਪ ਸੁਝਾਏ ਜਾਂਦੇ ਹਨ।',
+        doctorAdvice: 'ਡਾਕਟਰ / ਫਾਰਮਾਸਿਸਟ ਦੀ ਸਲਾਹ', doctorDescription: 'ਦਵਾਈ ਬਦਲਣ ਜਾਂ ਨਵੀਂ ਖੁਰਾਕ ਸ਼ੁਰੂ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਯੋਗ ਡਾਕਟਰ ਨਾਲ ਸਲਾਹ ਕਰੋ।',
+        fakeMedicine: 'ਨਕਲੀ ਦਵਾਈਆਂ ਤੋਂ ਸਾਵਧਾਨ', fakeDescription: 'ਬਿਨਾਂ ਤਸਦੀਕ ਵਾਲੇ ਆਨਲਾਈਨ ਵਿਕਰੇਤਿਆਂ ਤੋਂ ਬਚੋ। ਬੈਚ ਨੰਬਰ, ਬਣਾਉਣ ਦੀ ਮਿਤੀ ਅਤੇ ਸੀਲ ਜਾਂਚੋ।',
+        safetyQuote: 'ਤੁਹਾਡੀ ਸਿਹਤ ਕੀਮਤੀ ਹੈ। ਸੁਰੱਖਿਅਤ ਅਤੇ ਤਸਦੀਕਸ਼ੁਦਾ ਚੋਣ ਕਰੋ।', closeLogin: 'ਲੌਗਇਨ ਫਾਰਮ ਬੰਦ ਕਰੋ', accountLabel: 'MedicineCare ਖਾਤਾ',
+        welcomeBack: 'ਜੀ ਆਇਆਂ ਨੂੰ', loginSubtitle: 'ਦਵਾਈਆਂ ਸੇਵ ਕਰੋ ਅਤੇ ਆਪਣੀਆਂ ਸਿਹਤ ਪਸੰਦਾਂ ਤੱਕ ਪਹੁੰਚੋ।', login: 'ਲੌਗਇਨ',
+        createAccount: 'ਖਾਤਾ ਬਣਾਓ', fullName: 'ਪੂਰਾ ਨਾਮ', namePlaceholder: 'ਆਪਣਾ ਨਾਮ ਦਰਜ ਕਰੋ', emailOrPhone: 'ਈਮੇਲ ਜਾਂ ਫੋਨ ਨੰਬਰ',
+        identifierPlaceholder: 'you@example.com ਜਾਂ 10 ਅੰਕਾਂ ਦਾ ਨੰਬਰ', password: 'ਪਾਸਵਰਡ', passwordPlaceholder: 'ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰ',
+        showPassword: 'ਪਾਸਵਰਡ ਦਿਖਾਓ', hidePassword: 'ਪਾਸਵਰਡ ਲੁਕਾਓ', confirmPassword: 'ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ',
+        confirmPasswordPlaceholder: 'ਪਾਸਵਰਡ ਦੁਬਾਰਾ ਦਰਜ ਕਰੋ', loginSecurely: 'ਸੁਰੱਖਿਅਤ ਲੌਗਇਨ', sessionNote: 'ਤੁਹਾਡਾ ਡੈਮੋ ਸੈਸ਼ਨ ਸਿਰਫ਼ ਇਸ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਸੇਵ ਹੈ।',
+        signupSubtitle: 'ਦਵਾਈਆਂ ਦੀ ਤੁਲਨਾ ਅਤੇ ਬੱਚਤ ਦਾ ਸੌਖਾ ਤਰੀਕਾ ਪਾਓ।', createAccountButton: 'ਖਾਤਾ ਬਣਾਓ', nameRequired: 'ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ।',
+        identifierRequired: 'ਈਮੇਲ ਜਾਂ ਫੋਨ ਨੰਬਰ ਲਾਜ਼ਮੀ ਹੈ।', identifierInvalid: 'ਸਹੀ ਈਮੇਲ ਜਾਂ 10 ਅੰਕਾਂ ਦਾ ਭਾਰਤੀ ਫੋਨ ਨੰਬਰ ਦਰਜ ਕਰੋ।',
+        passwordShort: 'ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।', passwordsMismatch: 'ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ।', accountCreated: 'ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣ ਗਿਆ।',
+        loginSuccess: 'ਲੌਗਇਨ ਸਫਲ ਰਿਹਾ।', logoutConfirm: 'MedicineCare ਤੋਂ ਲੌਗਆਉਟ ਕਰਨਾ ਹੈ?', hi: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ', languageSelector: 'ਭਾਸ਼ਾ ਚੁਣੋ', resultsFor: 'ਨਤੀਜੇ',
+        allAvailable: 'ਸਾਰੀਆਂ ਦਵਾਈਆਂ', available: 'ਉਪਲਬਧ', showing: 'ਦਿਖਾਈਆਂ ਜਾ ਰਹੀਆਂ ਹਨ', medicines: 'ਦਵਾਈਆਂ', tabs: 'ਟੈਬ',
+        viewDetails: 'ਵੇਰਵੇ ਵੇਖੋ', noMedicine: 'ਕੋਈ ਦਵਾਈ ਜਾਂ ਬਿਮਾਰੀ ਨਹੀਂ ਮਿਲੀ।', trySearching: 'ਖੋਜੋ'
+    }
+};
+
+let currentLanguage = localStorage.getItem('medicineCareLanguage') || 'en';
+
+function changeLanguage(language) {
+    if (!translations[language]) return;
+    currentLanguage = language;
+    const dictionary = translations[language];
+    document.documentElement.lang = language;
+    document.getElementById('language-selector').value = language;
+    document.getElementById('page-title').textContent = dictionary.pageTitle;
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const value = dictionary[element.dataset.i18n];
+        if (value !== undefined) element.innerHTML = value;
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        element.placeholder = dictionary[element.dataset.i18nPlaceholder];
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
+        element.setAttribute('aria-label', dictionary[element.dataset.i18nAriaLabel]);
+    });
+    localStorage.setItem('medicineCareLanguage', language);
+    renderMedicines(document.getElementById('search-page-input')?.value.trim() || '');
+    updateAuthTrigger();
+    if (typeof setAuthMode === 'function') setAuthMode(authMode, true);
+}
+
 // Frontend demo authentication. Replace this storage layer with an API in production.
 const AUTH_STORAGE_KEY = 'medicineCareUser';
 let authMode = 'login';
@@ -283,27 +417,28 @@ function updateAuthTrigger() {
     if (!trigger || !label) return;
 
     if (user) {
-        label.textContent = user.name ? `Hi, ${user.name.split(' ')[0]}` : 'Profile';
+        label.textContent = user.name ? `${translations[currentLanguage].hi}, ${user.name.split(' ')[0]}` : 'Profile';
         trigger.innerHTML = `<i class="fa-regular fa-user"></i><span id="auth-trigger-label">${label.textContent}</span>`;
         trigger.title = 'Logout';
     } else {
-        label.textContent = 'Login / Sign Up';
-        trigger.innerHTML = '<i class="fa-regular fa-user"></i><span id="auth-trigger-label">Login / Sign Up</span>';
+        label.textContent = translations[currentLanguage].authLogin;
+        trigger.innerHTML = `<i class="fa-regular fa-user"></i><span id="auth-trigger-label">${label.textContent}</span>`;
         trigger.removeAttribute('title');
     }
 }
 
-function setAuthMode(mode) {
+function setAuthMode(mode, preserveStatus = false) {
     authMode = mode;
     const isSignup = mode === 'signup';
+    const dictionary = translations[currentLanguage];
     document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.toggle('active', tab.id === `${mode}-tab`));
     document.querySelectorAll('.auth-tab').forEach(tab => tab.setAttribute('aria-selected', String(tab.id === `${mode}-tab`)));
     document.querySelectorAll('.signup-only').forEach(field => { field.hidden = !isSignup; });
-    document.getElementById('auth-title').textContent = isSignup ? 'Create your account' : 'Welcome back';
-    document.getElementById('auth-subtitle').textContent = isSignup ? 'Get a simpler way to compare and save on medicines.' : 'Save medicines and access your health preferences.';
-    document.getElementById('auth-submit').textContent = isSignup ? 'Create account' : 'Login securely';
+    document.getElementById('auth-title').textContent = isSignup ? dictionary.createAccount : dictionary.welcomeBack;
+    document.getElementById('auth-subtitle').textContent = isSignup ? dictionary.signupSubtitle : dictionary.loginSubtitle;
+    document.getElementById('auth-submit').textContent = isSignup ? dictionary.createAccountButton : dictionary.loginSecurely;
     document.getElementById('auth-password').autocomplete = isSignup ? 'new-password' : 'current-password';
-    clearAuthMessages();
+    if (!preserveStatus) clearAuthMessages();
 }
 
 function clearAuthMessages() {
@@ -330,11 +465,12 @@ function validateAuthForm() {
     const phonePattern = /^[6-9]\d{9}$/;
     let valid = true;
 
-    if (authMode === 'signup' && name.length < 2) { setFieldError('auth-name', 'Please enter your full name.'); valid = false; }
-    if (!identifier) { setFieldError('auth-identifier', 'Email or phone number is required.'); valid = false; }
-    else if (!emailPattern.test(identifier) && !phonePattern.test(identifier.replace(/\s|-/g, ''))) { setFieldError('auth-identifier', 'Enter a valid email or 10-digit Indian phone number.'); valid = false; }
-    if (password.length < 6) { setFieldError('auth-password', 'Password must be at least 6 characters.'); valid = false; }
-    if (authMode === 'signup' && password !== confirmPassword) { setFieldError('auth-confirm-password', 'Passwords do not match.'); valid = false; }
+    const dictionary = translations[currentLanguage];
+    if (authMode === 'signup' && name.length < 2) { setFieldError('auth-name', dictionary.nameRequired); valid = false; }
+    if (!identifier) { setFieldError('auth-identifier', dictionary.identifierRequired); valid = false; }
+    else if (!emailPattern.test(identifier) && !phonePattern.test(identifier.replace(/\s|-/g, ''))) { setFieldError('auth-identifier', dictionary.identifierInvalid); valid = false; }
+    if (password.length < 6) { setFieldError('auth-password', dictionary.passwordShort); valid = false; }
+    if (authMode === 'signup' && password !== confirmPassword) { setFieldError('auth-confirm-password', dictionary.passwordsMismatch); valid = false; }
     return valid ? { name, identifier, password } : null;
 }
 
@@ -355,7 +491,7 @@ function openAuthModal() {
 
 function handleAuthTrigger() {
     if (getStoredUser()) {
-        if (confirm('Logout from MedicineCare?')) {
+        if (confirm(translations[currentLanguage].logoutConfirm)) {
             localStorage.removeItem(AUTH_STORAGE_KEY);
             updateAuthTrigger();
         }
@@ -375,7 +511,7 @@ function submitAuth(event) {
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(savedUser));
     updateAuthTrigger();
     const status = document.getElementById('auth-status');
-    status.textContent = authMode === 'signup' ? 'Account created successfully.' : 'Login successful.';
+    status.textContent = authMode === 'signup' ? translations[currentLanguage].accountCreated : translations[currentLanguage].loginSuccess;
     status.className = 'auth-status success';
     setTimeout(closeAuthModal, 700);
 }
@@ -384,6 +520,7 @@ function submitAuth(event) {
 document.addEventListener('DOMContentLoaded', () => {
     renderMedicines();
     loadDefaultStoresFallback();
+    changeLanguage(currentLanguage);
     updateAuthTrigger();
 
     document.getElementById('auth-trigger')?.addEventListener('click', handleAuthTrigger);
