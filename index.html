@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DawaiSahi - Sasti Bhi • Surakshit Bhi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="logo-container" onclick="switchPage('home')">
+            <div class="logo-icon"><i class="fa-solid fa-pills"></i></div>
+            <div>
+                <h1>DawaiSahi</h1>
+                <p>Sasti Bhi • Surakshit Bhi</p>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a id="nav-home" class="active" onclick="switchPage('home')">Home</a>
+            <a id="nav-search" onclick="switchPage('search')">Search</a>
+            <a id="nav-stores" onclick="switchPage('stores')">Nearby Stores</a>
+            <a id="nav-safety" onclick="switchPage('safety')">Safety & Info</a>
+        </nav>
+        <button class="login-btn" id="auth-trigger" type="button">
+            <i class="fa-regular fa-user"></i> <span id="auth-trigger-label">Login / Sign Up</span>
+        </button>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="main-container">
+
+        <!---------------- 1. HOME PAGE ---------------->
+        <section id="page-home" class="page active">
+            <div class="hero">
+                <div class="hero-content">
+                    <span class="badge">Same Medicine • Different Prices • Big Savings!</span>
+                    <h2>Sahi Dawa<br>Sahi Daam</h2>
+                    <p>Compare prices of branded, Jan Aushadhi and Government medicines. Save money. Stay safe.</p>
+                    
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="home-search-input" placeholder="Enter disease or medicine (e.g. Fever, Diabetes, Acidity)...">
+                        <button class="search-btn" onclick="executeSearch('home-search-input')">Search</button>
+                    </div>
+                </div>
+                
+                <div class="hero-card">
+                    <div class="hero-card-icon"><i class="fa-solid fa-pills"></i></div>
+                    <h3>Save up to 80%</h3>
+                    <p>Switch to Jan Aushadhi alternatives and cut your monthly medical bills.</p>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card" onclick="switchPage('search')">
+                    <div class="icon-box green"><i class="fa-solid fa-chart-line"></i></div>
+                    <h3>Compare Prices</h3>
+                    <p>Find cheapest option across government & generic stores.</p>
+                </div>
+                <div class="feature-card" onclick="switchPage('safety')">
+                    <div class="icon-box purple"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>Check Genuine Medicine</h3>
+                    <p>Avoid fake drugs with verified batch & salt tracking.</p>
+                </div>
+                <div class="feature-card" onclick="switchPage('stores')">
+                    <div class="icon-box blue"><i class="fa-solid fa-location-dot"></i></div>
+                    <h3>Find Nearby</h3>
+                    <p>Jan Aushadhi / Govt Stores near your exact location.</p>
+                </div>
+                <div class="feature-card" onclick="switchPage('safety')">
+                    <div class="icon-box rose"><i class="fa-solid fa-circle-check"></i></div>
+                    <h3>Safe & Reliable</h3>
+                    <p>Verified sources and trusted information for patients.</p>
+                </div>
+            </div>
+
+            <div class="quote-banner">
+                <i class="fa-solid fa-heart" style="color: #0d9488;"></i> Because your health should not be expensive!
+            </div>
+        </section>
+
+        <!---------------- 2. SEARCH RESULTS PAGE ---------------->
+        <section id="page-search" class="page">
+            <div class="search-filter-container">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-page-input" placeholder="Search by disease, salt or medicine...">
+                    <button class="search-btn" onclick="executeSearch('search-page-input')">Search</button>
+                </div>
+                <div class="filter-pills">
+                    <button class="pill active">All</button>
+                    <button class="pill">Branded (English)</button>
+                    <button class="pill">Jan Aushadhi</button>
+                    <button class="pill">Government</button>
+                </div>
+            </div>
+
+            <div class="results-header">
+                <span id="result-query-text">All Medicines</span>
+                <span id="result-count" class="result-count">Showing medicines</span>
+            </div>
+
+            <div class="medicine-list" id="dynamic-medicine-list">
+                <!-- Dynamic cards will load here -->
+            </div>
+        </section>
+
+        <!---------------- 3. MEDICINE DETAILS & COMPARISON PAGE ---------------->
+        <section id="page-details" class="page">
+            <button class="back-link" onclick="switchPage('search')"><i class="fa-solid fa-arrow-left"></i> Back to Results</button>
+            
+            <div class="detail-top-card">
+                <div class="med-info">
+                    <div class="med-icon large"><i class="fa-solid fa-pills"></i></div>
+                    <div>
+                        <h2 id="detail-med-name">Paracetamol 500 mg</h2>
+                        <p id="detail-med-cat" class="med-cat">Pain Relief / Fever • <span style="color: #0d9488;">Common Medicine</span></p>
+                        <p class="rating-text">⭐ 4.6 <span style="color:#94a3b8; font-weight:normal;">(based on 1.2k reviews)</span></p>
+                    </div>
+                </div>
+                <div class="big-save-box">
+                    <small>Save up to</small>
+                    <h2 id="detail-save-pct">76%</h2>
+                    <small>by choosing Jan Aushadhi / Govt</small>
+                </div>
+            </div>
+
+            <div class="comparison-box">
+                <h3>Price Comparison</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>Brand / Salt</th>
+                            <th>Price (per pack)</th>
+                            <th>Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>English (Branded)</td>
+                            <td id="table-brand-name">Standard Brand</td>
+                            <td id="table-eng-price">₹42</td>
+                            <td>—</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Jan Aushadhi</strong></td>
+                            <td id="table-med-name-1">Paracetamol 500</td>
+                            <td id="table-jan-price" style="color:#0d9488; font-weight:bold;">₹12</td>
+                            <td style="color:#059669; font-weight:bold;">71% less</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Government</strong></td>
+                            <td id="table-med-name-2">Paracetamol 500</td>
+                            <td id="table-gov-price" style="color:#059669; font-weight:bold;">₹10</td>
+                            <td style="color:#059669; font-weight:bold;">76% less</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="notice-strip">
+                    <i class="fa-solid fa-circle-check" style="color: #059669;"></i>
+                    <span><strong>Same medicine. Different prices. Choose wisely!</strong> Always consult a doctor or pharmacist before switching medicine.</span>
+                </div>
+
+                <div class="text-right">
+                    <button class="primary-btn" onclick="switchPage('stores')"><i class="fa-solid fa-location-dot"></i> Find Nearest Stores</button>
+                </div>
+            </div>
+        </section>
+
+        <!---------------- 4. NEAREST STORE / MAP PAGE ---------------->
+        <section id="page-stores" class="page">
+            <div class="flex-between">
+                <div>
+                    <h2>Nearest Jan Aushadhi / Government Stores</h2>
+                    <p class="subtext">Use your live GPS location to calculate exact distance.</p>
+                </div>
+                <div class="location-badge" style="gap: 12px;">
+                    <button class="gps-btn" onclick="requestUserGPSLocation()"><i class="fa-solid fa-location-crosshairs"></i> Use Live GPS Location</button>
+                </div>
+            </div>
+
+            <div class="mock-map">
+                <div class="map-bg-text" id="map-city-title">CLICK "USE LIVE GPS LOCATION"</div>
+                <div class="map-pin pin-1"><i class="fa-solid fa-location-dot"></i> <span id="pin-1-text">Jan Aushadhi Kendra</span></div>
+                <div class="map-pin pin-2"><i class="fa-solid fa-location-dot"></i> <span id="pin-2-text">Govt Medical Store</span></div>
+            </div>
+
+            <div class="store-list" id="dynamic-store-list">
+                <!-- Stores with real distance and directions will load here -->
+            </div>
+        </section>
+
+        <!---------------- 5. SAFETY & VERIFICATION PAGE ---------------->
+        <section id="page-safety" class="page">
+            <div>
+                <h2>How We Ensure Safe & Genuine Medicine?</h2>
+                <p class="subtext">Your safety is our utmost priority. Learn about our verification process.</p>
+            </div>
+
+            <div class="safety-grid">
+                <div class="safety-card">
+                    <div class="icon-box green"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>Verified Sources</h3>
+                    <p>We show medicines directly from authorized Jan Aushadhi Kendras, Government stores, and trusted pharmaceutical directories.</p>
+                </div>
+                <div class="safety-card">
+                    <div class="icon-box blue"><i class="fa-solid fa-pills"></i></div>
+                    <h3>Genuine Medicine</h3>
+                    <p>Only government-approved generic equivalents with identical active pharmaceutical ingredients (salts) are recommended.</p>
+                </div>
+                <div class="safety-card">
+                    <div class="icon-box purple"><i class="fa-solid fa-user-doctor"></i></div>
+                    <h3>Doctor / Pharmacist Advice</h3>
+                    <p>Always consult a qualified doctor before switching any medicine or starting a new dosage plan.</p>
+                </div>
+                <div class="safety-card">
+                    <div class="icon-box rose"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <h3>Beware of Fake Medicines</h3>
+                    <p>Avoid random unverified online sellers. Always check the batch number, manufacturing date, and physical seal.</p>
+                </div>
+            </div>
+
+            <div class="quote-banner" style="margin-top: 30px;">
+                <i class="fa-solid fa-heart" style="color: #0d9488;"></i> Your health is precious. Choose safe. Choose verified.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 DawaiSahi. Sasti Bhi • Surakshit Bhi.</p>
+    </footer>
+
+    <!-- AUTH MODAL -->
+    <div class="auth-modal" id="auth-modal" aria-hidden="true">
+        <div class="auth-backdrop" data-close-auth></div>
+        <section class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+            <button class="auth-close" id="auth-close" type="button" aria-label="Close login form">&times;</button>
+            <div class="auth-heading">
+                <div class="auth-icon"><i class="fa-solid fa-shield-heart"></i></div>
+                <div>
+                    <p class="auth-eyebrow">DawaiSahi account</p>
+                    <h2 id="auth-title">Welcome back</h2>
+                    <p id="auth-subtitle">Save medicines and access your health preferences.</p>
+                </div>
+            </div>
+
+            <div class="auth-tabs" role="tablist" aria-label="Account access">
+                <button class="auth-tab active" id="login-tab" type="button" role="tab" aria-selected="true">Login</button>
+                <button class="auth-tab" id="signup-tab" type="button" role="tab" aria-selected="false">Create account</button>
+            </div>
+
+            <form id="auth-form" novalidate>
+                <div class="auth-field signup-only" hidden>
+                    <label for="auth-name">Full name</label>
+                    <input id="auth-name" name="name" type="text" autocomplete="name" placeholder="Enter your name">
+                    <small class="field-error" id="auth-name-error"></small>
+                </div>
+
+                <div class="auth-field">
+                    <label for="auth-identifier">Email or phone number</label>
+                    <input id="auth-identifier" name="identifier" type="text" inputmode="email" autocomplete="username" placeholder="you@example.com or 10-digit number">
+                    <small class="field-error" id="auth-identifier-error"></small>
+                </div>
+
+                <div class="auth-field">
+                    <label for="auth-password">Password</label>
+                    <div class="password-wrap">
+                        <input id="auth-password" name="password" type="password" autocomplete="current-password" placeholder="Minimum 6 characters">
+                        <button class="password-toggle" id="password-toggle" type="button" aria-label="Show password"><i class="fa-regular fa-eye"></i></button>
+                    </div>
+                    <small class="field-error" id="auth-password-error"></small>
+                </div>
+
+                <div class="auth-field signup-only" hidden>
+                    <label for="auth-confirm-password">Confirm password</label>
+                    <input id="auth-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Re-enter your password">
+                    <small class="field-error" id="auth-confirm-password-error"></small>
+                </div>
+
+                <p class="auth-status" id="auth-status" role="status" aria-live="polite"></p>
+                <button class="auth-submit" id="auth-submit" type="submit">Login securely</button>
+                <p class="auth-note"><i class="fa-solid fa-lock"></i> Your demo session is stored only in this browser.</p>
+            </form>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
