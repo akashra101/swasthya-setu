@@ -145,7 +145,7 @@ function renderMedicines(query = '') {
                 <div class="med-icon"><i class="fa-solid fa-pills"></i></div>
                 <div>
                     <div class="med-title-row">
-                        <h3>${med.name}</h3>
+                        <h3>${translateMedicineName(med.name)}</h3>
                         <span class="save-badge">${dictionary.saveUpToShort} ${med.save}</span>
                     </div>
                     <p class="med-cat">${med.category} • Branded: <span style="color: #0f766e; font-weight:500;">${med.brand}</span></p>
@@ -249,9 +249,17 @@ function loadDefaultStoresFallback() {
     }
 }
 
+let currentDetailMedicine = {
+    name: 'Paracetamol 500 mg',
+    brand: 'Standard Brand',
+    category: 'Pain Relief / Fever'
+};
+
 // Open details page with dynamic data
 function openDetails(name, brand, category, eng, jan, gov, save) {
-    document.getElementById('detail-med-name').innerText = name;
+    currentDetailMedicine = { name, brand, category };
+    const displayName = translateMedicineName(name);
+    document.getElementById('detail-med-name').innerText = displayName;
     document.getElementById('detail-med-cat').innerHTML = `${category} • Branded: <span style="color: #0f766e; font-weight:500;">${brand}</span>`;
     document.getElementById('detail-save-pct').innerText = save;
     
@@ -260,8 +268,8 @@ function openDetails(name, brand, category, eng, jan, gov, save) {
     document.getElementById('table-jan-price').innerText = '₹' + jan;
     document.getElementById('table-gov-price').innerText = '₹' + gov;
     
-    document.getElementById('table-med-name-1').innerText = name;
-    document.getElementById('table-med-name-2').innerText = name;
+    document.getElementById('table-med-name-1').innerText = displayName;
+    document.getElementById('table-med-name-2').innerText = displayName;
 
     switchPage('details');
 }
@@ -372,6 +380,54 @@ const translations = {
     }
 };
 
+// Generic medicine names are localized while strengths and units remain unchanged.
+const localizedMedicineNames = {
+    hi: {
+        Paracetamol: 'पैरासिटामोल', Ibuprofen: 'इबुप्रोफेन', Cetirizine: 'सेटिरीज़िन', Metformin: 'मेटफॉर्मिन',
+        Amoxycillin: 'एमोक्सिसिलिन', Clavulanate: 'क्लैवुलानेट', Azithromycin: 'एज़िथ्रोमाइसिन', Pantoprazole: 'पैंटोप्राज़ोल',
+        Atorvastatin: 'एटोरवास्टेटिन', Amlodipine: 'एम्लोडिपिन', Telmisartan: 'टेल्मिसार्टन', Diclofenac: 'डिक्लोफेनाक',
+        Sodium: 'सोडियम', Omeprazole: 'ओमेप्राज़ोल', Rabeprazole: 'रैबेप्राज़ोल', Levocetirizine: 'लेवोसेटिरीज़िन',
+        Montelukast: 'मोंटेलुकास्ट', Ciprofloxacin: 'सिप्रोफ्लॉक्सासिन', Cefixime: 'सेफिक्सिम', Doxycycline: 'डॉक्सीसाइक्लिन',
+        Glimepiride: 'ग्लिमेपिराइड', Rosuvastatin: 'रोसुवास्टेटिन', Clopidogrel: 'क्लोपिडोग्रेल', Aspirin: 'एस्पिरिन',
+        Ranitidine: 'रैनिटिडिन', Domperidone: 'डोमपेरिडोन', Ondansetron: 'ओन्डैनसेट्रॉन', Fexofenadine: 'फेक्सोफेनाडिन',
+        Vitamin: 'विटामिन', Methylcobalamin: 'मिथाइलकोबालामिन', Calcium: 'कैल्शियम', Carbonate: 'कार्बोनेट',
+        Folic: 'फोलिक', Acid: 'एसिड', Ferrous: 'फेरस', Ascorbate: 'एस्कॉर्बेट', Levothyroxine: 'लेवोथायरोक्सिन',
+        Fluconazole: 'फ्लुकोनाज़ोल', Itraconazole: 'इट्राकोनाज़ोल', Aceclofenac: 'ऐसिक्लोफेनाक', Mefenamic: 'मेफेनामिक',
+        Tramadol: 'ट्रामाडोल', Norfloxacin: 'नॉरफ्लॉक्सासिन', Teneligliptin: 'टेनिलिग्लिप्टिन', Voglibose: 'वोग्लिबोज़',
+        Atenolol: 'एटेनोलोल', Losartan: 'लोसार्टन', Spironolactone: 'स्पाइरोनोलैक्टोन', Furosemide: 'फ्यूरोसेमाइड',
+        Prednisolone: 'प्रेडनिसोलोन'
+    },
+    pa: {
+        Paracetamol: 'ਪੈਰਾਸੀਟਾਮੋਲ', Ibuprofen: 'ਆਈਬੂਪ੍ਰੋਫੇਨ', Cetirizine: 'ਸੇਟੀਰੀਜ਼ਿਨ', Metformin: 'ਮੈਟਫੋਰਮਿਨ',
+        Amoxycillin: 'ਐਮੋਕਸੀਸਿਲਿਨ', Clavulanate: 'ਕਲੈਵੂਲਾਨੇਟ', Azithromycin: 'ਐਜ਼ੀਥਰੋਮਾਈਸਿਨ', Pantoprazole: 'ਪੈਂਟੋਪ੍ਰਾਜ਼ੋਲ',
+        Atorvastatin: 'ਐਟੋਰਵਾਸਟੇਟਿਨ', Amlodipine: 'ਐਮਲੋਡੀਪਿਨ', Telmisartan: 'ਟੈਲਮਿਸਾਰਟਨ', Diclofenac: 'ਡਾਈਕਲੋਫੇਨਾਕ',
+        Sodium: 'ਸੋਡੀਅਮ', Omeprazole: 'ਓਮੇਪ੍ਰਾਜ਼ੋਲ', Rabeprazole: 'ਰੈਬੇਪ੍ਰਾਜ਼ੋਲ', Levocetirizine: 'ਲੇਵੋਸੇਟੀਰੀਜ਼ਿਨ',
+        Montelukast: 'ਮੋਂਟੇਲੂਕਾਸਟ', Ciprofloxacin: 'ਸਿਪ੍ਰੋਫਲੋਕਸਾਸਿਨ', Cefixime: 'ਸੇਫਿਕਸਿਮ', Doxycycline: 'ਡੌਕਸੀਸਾਈਕਲਿਨ',
+        Glimepiride: 'ਗਲਾਈਮੇਪਿਰਾਈਡ', Rosuvastatin: 'ਰੋਸੂਵਾਸਟੇਟਿਨ', Clopidogrel: 'ਕਲੋਪੀਡੋਗ੍ਰੇਲ', Aspirin: 'ਐਸਪਿਰਿਨ',
+        Ranitidine: 'ਰੈਨਿਟਿਡਿਨ', Domperidone: 'ਡੌਮਪੇਰੀਡੋਨ', Ondansetron: 'ਓਂਡੈਨਸੈਟਰੋਨ', Fexofenadine: 'ਫੈਕਸੋਫੇਨਾਡਿਨ',
+        Vitamin: 'ਵਿਟਾਮਿਨ', Methylcobalamin: 'ਮੈਥਾਈਲਕੋਬਾਲਾਮਿਨ', Calcium: 'ਕੈਲਸ਼ੀਅਮ', Carbonate: 'ਕਾਰਬੋਨੇਟ',
+        Folic: 'ਫੋਲਿਕ', Acid: 'ਐਸਿਡ', Ferrous: 'ਫੈਰਸ', Ascorbate: 'ਐਸਕੋਰਬੇਟ', Levothyroxine: 'ਲੇਵੋਥਾਇਰੋਕਸਿਨ',
+        Fluconazole: 'ਫਲੂਕੋਨਾਜ਼ੋਲ', Itraconazole: 'ਇਟਰਾਕੋਨਾਜ਼ੋਲ', Aceclofenac: 'ਐਸੀਕਲੋਫੇਨਾਕ', Mefenamic: 'ਮੇਫੇਨਾਮਿਕ',
+        Tramadol: 'ਟ੍ਰਾਮਾਡੋਲ', Norfloxacin: 'ਨੌਰਫਲੋਕਸਾਸਿਨ', Teneligliptin: 'ਟੈਨਿਲਿਗਲਿਪਟਿਨ', Voglibose: 'ਵੋਗਲੀਬੋਜ਼',
+        Atenolol: 'ਐਟੇਨੋਲੋਲ', Losartan: 'ਲੋਸਾਰਟਨ', Spironolactone: 'ਸਪਾਇਰੋਨੋਲੈਕਟੋਨ', Furosemide: 'ਫਿਊਰੋਸੇਮਾਈਡ',
+        Prednisolone: 'ਪ੍ਰੈਡਨਿਸੋਲੋਨ'
+    }
+};
+
+function translateMedicineName(name) {
+    const replacements = localizedMedicineNames[currentLanguage];
+    if (!replacements) return name;
+
+    return name.replace(/[A-Za-z]+/g, word => replacements[word] || word);
+}
+
+function refreshDetailMedicineName() {
+    const displayName = translateMedicineName(currentDetailMedicine.name);
+    document.getElementById('detail-med-name').innerText = displayName;
+    document.getElementById('table-med-name-1').innerText = displayName;
+    document.getElementById('table-med-name-2').innerText = displayName;
+}
+
 let currentLanguage = localStorage.getItem('medicineCareLanguage') || 'en';
 
 function changeLanguage(language) {
@@ -393,6 +449,7 @@ function changeLanguage(language) {
     });
     localStorage.setItem('medicineCareLanguage', language);
     renderMedicines(document.getElementById('search-page-input')?.value.trim() || '');
+    refreshDetailMedicineName();
     updateAuthTrigger();
     if (typeof setAuthMode === 'function') setAuthMode(authMode, true);
 }
