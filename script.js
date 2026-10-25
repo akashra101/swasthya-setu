@@ -1,4 +1,4 @@
-// 50+ Medicines Database
+//Medicines Database
 const medicinesData = [
     { name: "Paracetamol 500 mg", brand: "Crocin / Dolo 650", category: "Pain Relief / Fever", keywords: "fever headache pain bodyache paracetamol dolo crocin", eng: 42, jan: 12, gov: 10, save: "76%" },
     { name: "Ibuprofen 400 mg", brand: "Brufen", category: "Pain & Inflammation", keywords: "pain inflammation bodyache swelling ibuprofen brufen", eng: 68, jan: 24, gov: 20, save: "71%" },
@@ -56,7 +56,6 @@ const medicinesData = [
     { name: "Pregabalin 75 mg", brand: "Gabapin / Lyrica", category: "Nerve Pain", keywords: "nerve pain sciatica pregabalin gabapin", eng: 130, jan: 35, gov: 28, save: "73%" }
 ];
 
-// Store Database with fixed Coordinates for Distance Calculation
 const storesCoordinates = [
     { name: "Jan Aushadhi Kendra (Phase 7)", address: "Phase 7, Mohali", lat: 30.7150, lon: 76.7100, timing: "09:00 AM - 8:00 PM" },
     { name: "Govt Civil Hospital Dispensary", address: "Phase 6, Mohali", lat: 30.7300, lon: 76.7000, timing: "09:00 AM - 5:00 PM" },
@@ -64,7 +63,6 @@ const storesCoordinates = [
     { name: "District Jan Aushadhi Kendra", address: "Sector 17, Chandigarh", lat: 30.7414, lon: 76.7800, timing: "09:00 AM - 6:00 PM" }
 ];
 
-// Haversine formula to calculate exact distance in KM
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
     const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -77,7 +75,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return (R * c).toFixed(1);
 }
 
-// Switch pages function
 function switchPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
@@ -98,7 +95,6 @@ function switchPage(pageId) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Unified Search Execution Function
 function executeSearch(inputId) {
     const inputElement = document.getElementById(inputId);
     const query = inputElement ? inputElement.value.trim() : '';
@@ -110,7 +106,6 @@ function executeSearch(inputId) {
     switchPage('search');
 }
 
-// Render medicines into DOM based on query
 function renderMedicines(query = '') {
     const container = document.getElementById('dynamic-medicine-list');
     if(!container) return;
@@ -118,14 +113,9 @@ function renderMedicines(query = '') {
     const lowerQuery = query.toLowerCase();
     const filtered = medicinesData.filter(m => {
         const localized = getLocalizedMedicine(m);
-        return localized.name.toLowerCase().includes(lowerQuery) ||
-        localized.category.toLowerCase().includes(lowerQuery) ||
-        localized.brand.toLowerCase().includes(lowerQuery) ||
-        m.name.toLowerCase().includes(lowerQuery) || 
-        m.category.toLowerCase().includes(lowerQuery) ||
-        m.brand.toLowerCase().includes(lowerQuery) ||
-        m.keywords.toLowerCase().includes(lowerQuery) ||
-        query === '';
+        const translatedText = Object.values(m.translations).flatMap(values => Object.values(values)).join(' ');
+        const searchableText = `${translatedText} ${m.keywords}`.toLowerCase();
+        return searchableText.includes(lowerQuery) || query === '';
     });
 
     const dictionary = translations[currentLanguage];
@@ -138,7 +128,7 @@ function renderMedicines(query = '') {
         container.innerHTML = `
             <div style="background: white; padding: 40px; border-radius: 16px; text-align: center; color: #64748b; border: 1px solid #e2e8f0;">
                 <p style="font-size: 1.1rem; font-weight: 600;">${dictionary.noMedicine}</p>
-                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 5px;">${dictionary.trySearching}: <strong>Fever, Diabetes, Acidity, BP, Infection, Pain</strong></p>
+                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 5px;">${dictionary.trySearching}</p>
             </div>`;
         return;
     }
@@ -166,7 +156,6 @@ function renderMedicines(query = '') {
     `).join('');
 }
 
-// Live GPS & Real Distance Calculation
 function requestUserGPSLocation() {
     const cityTitle = document.getElementById('map-city-title');
     const storeContainer = document.getElementById('dynamic-store-list');
@@ -261,7 +250,6 @@ let currentDetailMedicine = {
     category: 'Pain Relief / Fever'
 };
 
-// Open details page with dynamic data
 function openDetails(name, brand, category, eng, jan, gov, save) {
     currentDetailMedicine = { name, brand, category };
     const localized = getLocalizedMedicine(currentDetailMedicine);
@@ -286,7 +274,7 @@ const translations = {
         pageTitle: 'MedicineCare - Affordable & Safe', brandTagline: 'Affordable • Safe', navHome: 'Home', navSearch: 'Search',
         navStores: 'Nearby Stores', navSafety: 'Safety & Info', authLogin: 'Login / Sign Up', heroBadge: 'Same Medicine • Different Prices • Big Savings!',
         heroTitle: 'Right Medicine<br>Right Price', heroDescription: 'Compare prices of branded, Jan Aushadhi and Government medicines. Save money. Stay safe.',
-        homeSearchPlaceholder: 'Enter disease or medicine (e.g. Fever, Diabetes, Acidity)...', searchPlaceholder: 'Search by disease, salt or medicine...',
+        homeSearchPlaceholder: 'Enter disease or medicine...', searchPlaceholder: 'Search by disease, salt or medicine...',
         searchButton: 'Search', saveUpTo: 'Save up to 80%', saveUpToShort: 'Save up to', saveDescription: 'Switch to Jan Aushadhi alternatives and cut your monthly medical bills.',
         comparePrices: 'Compare Prices', compareDescription: 'Find cheapest option across government & generic stores.', genuineMedicine: 'Genuine Medicine',
         genuineDescription: 'Avoid fake drugs with verified batch & salt tracking.', findNearby: 'Find Nearby', nearbyDescription: 'Jan Aushadhi / Govt Stores near your exact location.',
@@ -315,13 +303,15 @@ const translations = {
         passwordsMismatch: 'Passwords do not match.', accountCreated: 'Account created successfully.', loginSuccess: 'Login successful.',
         logoutConfirm: 'Logout from MedicineCare?', hi: 'Hi', languageSelector: 'Select language', resultsFor: 'Results for', allAvailable: 'All Medicines', available: 'Available',
         showing: 'Showing', medicines: 'medicines', tabs: 'tabs', viewDetails: 'View Details', noMedicine: 'No medicine or disease found.',
-        trySearching: 'Try searching'
+        trySearching: 'Try searching', voiceSearch: 'Voice search', voiceSearchUnsupported: 'Voice search is not supported in this browser.',
+        voiceSearchError: 'Voice search could not be completed. Please try again.',
+        voiceSearchPermissionDenied: 'Microphone permission was denied. Please allow microphone access and try again.'
     },
     hi: {
         pageTitle: 'MedicineCare - सस्ती और सुरक्षित', brandTagline: 'सस्ती • सुरक्षित', navHome: 'होम', navSearch: 'खोजें',
         navStores: 'नज़दीकी स्टोर', navSafety: 'सुरक्षा और जानकारी', authLogin: 'लॉगिन / साइन अप', heroBadge: 'एक ही दवा • अलग कीमतें • बड़ी बचत!',
         heroTitle: 'सही दवा<br>सही दाम', heroDescription: 'ब्रांडेड, जन औषधि और सरकारी दवाओं की कीमतों की तुलना करें। पैसे बचाएं और सुरक्षित रहें।',
-        homeSearchPlaceholder: 'बीमारी या दवा दर्ज करें (जैसे बुखार, मधुमेह, एसिडिटी)...', searchPlaceholder: 'बीमारी, साल्ट या दवा से खोजें...',
+        homeSearchPlaceholder: 'बीमारी या दवा दर्ज करें...', searchPlaceholder: 'बीमारी, साल्ट या दवा से खोजें...',
         searchButton: 'खोजें', saveUpTo: '80% तक बचत', saveUpToShort: 'बचत तक', saveDescription: 'जन औषधि के विकल्प चुनें और अपने मासिक मेडिकल खर्च को कम करें।',
         comparePrices: 'कीमतों की तुलना', compareDescription: 'सरकारी और जेनेरिक स्टोर में सबसे सस्ता विकल्प खोजें।', genuineMedicine: 'असली दवा',
         genuineDescription: 'सत्यापित बैच और साल्ट ट्रैकिंग से नकली दवाओं से बचें।', findNearby: 'नज़दीकी खोजें', nearbyDescription: 'अपने स्थान के पास जन औषधि / सरकारी स्टोर खोजें।',
@@ -349,13 +339,15 @@ const translations = {
         passwordShort: 'पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।', passwordsMismatch: 'पासवर्ड मेल नहीं खाते।', accountCreated: 'खाता सफलतापूर्वक बन गया।',
         loginSuccess: 'लॉगिन सफल रहा।', logoutConfirm: 'MedicineCare से लॉगआउट करें?', hi: 'नमस्ते', languageSelector: 'भाषा चुनें', resultsFor: 'परिणाम',
         allAvailable: 'सभी दवाएं', available: 'उपलब्ध', showing: 'दिखाई जा रही हैं', medicines: 'दवाएं', tabs: 'टैब', brandedLabel: 'ब्रांडेड', directions: 'दिशा-निर्देश',
-        viewDetails: 'विवरण देखें', noMedicine: 'कोई दवा या बीमारी नहीं मिली।', trySearching: 'खोजें'
+        viewDetails: 'विवरण देखें', noMedicine: 'कोई दवा या बीमारी नहीं मिली।', trySearching: 'खोजें', voiceSearch: 'वॉइस सर्च',
+        voiceSearchUnsupported: 'इस ब्राउज़र में वॉइस सर्च समर्थित नहीं है।', voiceSearchError: 'वॉइस सर्च पूरा नहीं हो सका। कृपया फिर कोशिश करें।',
+        voiceSearchPermissionDenied: 'माइक्रोफ़ोन की अनुमति नहीं मिली। माइक्रोफ़ोन एक्सेस की अनुमति देकर फिर कोशिश करें।'
     },
     pa: {
         pageTitle: 'MedicineCare - ਸਸਤੀ ਅਤੇ ਸੁਰੱਖਿਅਤ', brandTagline: 'ਸਸਤੀ • ਸੁਰੱਖਿਅਤ', navHome: 'ਹੋਮ', navSearch: 'ਖੋਜ',
         navStores: 'ਨੇੜਲੇ ਸਟੋਰ', navSafety: 'ਸੁਰੱਖਿਆ ਅਤੇ ਜਾਣਕਾਰੀ', authLogin: 'ਲੌਗਇਨ / ਸਾਈਨ ਅੱਪ', heroBadge: 'ਇੱਕੋ ਦਵਾਈ • ਵੱਖਰੀਆਂ ਕੀਮਤਾਂ • ਵੱਡੀ ਬੱਚਤ!',
         heroTitle: 'ਸਹੀ ਦਵਾਈ<br>ਸਹੀ ਕੀਮਤ', heroDescription: 'ਬ੍ਰਾਂਡਡ, ਜਨ ਔਸ਼ਧੀ ਅਤੇ ਸਰਕਾਰੀ ਦਵਾਈਆਂ ਦੀਆਂ ਕੀਮਤਾਂ ਦੀ ਤੁਲਨਾ ਕਰੋ। ਪੈਸੇ ਬਚਾਓ ਅਤੇ ਸੁਰੱਖਿਅਤ ਰਹੋ।',
-        homeSearchPlaceholder: 'ਬਿਮਾਰੀ ਜਾਂ ਦਵਾਈ ਦਰਜ ਕਰੋ (ਜਿਵੇਂ ਬੁਖਾਰ, ਸ਼ੂਗਰ, ਐਸਿਡਿਟੀ)...', searchPlaceholder: 'ਬਿਮਾਰੀ, ਸਾਲਟ ਜਾਂ ਦਵਾਈ ਨਾਲ ਖੋਜੋ...',
+        homeSearchPlaceholder: 'ਬਿਮਾਰੀ ਜਾਂ ਦਵਾਈ ਦਰਜ ਕਰੋ...', searchPlaceholder: 'ਬਿਮਾਰੀ, ਸਾਲਟ ਜਾਂ ਦਵਾਈ ਨਾਲ ਖੋਜੋ...',
         searchButton: 'ਖੋਜੋ', saveUpTo: '80% ਤੱਕ ਬੱਚਤ', saveUpToShort: 'ਬੱਚਤ ਤੱਕ', saveDescription: 'ਜਨ ਔਸ਼ਧੀ ਦੇ ਵਿਕਲਪ ਚੁਣੋ ਅਤੇ ਮਹੀਨਾਵਾਰ ਮੈਡੀਕਲ ਖਰਚ ਘਟਾਓ।',
         comparePrices: 'ਕੀਮਤਾਂ ਦੀ ਤੁਲਨਾ', compareDescription: 'ਸਰਕਾਰੀ ਅਤੇ ਜੈਨਰਿਕ ਸਟੋਰਾਂ ਵਿੱਚ ਸਭ ਤੋਂ ਸਸਤਾ ਵਿਕਲਪ ਲੱਭੋ।', genuineMedicine: 'ਅਸਲੀ ਦਵਾਈ',
         genuineDescription: 'ਤਸਦੀਕਸ਼ੁਦਾ ਬੈਚ ਅਤੇ ਸਾਲਟ ਟਰੈਕਿੰਗ ਨਾਲ ਨਕਲੀ ਦਵਾਈਆਂ ਤੋਂ ਬਚੋ।', findNearby: 'ਨੇੜੇ ਲੱਭੋ', nearbyDescription: 'ਆਪਣੀ ਥਾਂ ਦੇ ਨੇੜੇ ਜਨ ਔਸ਼ਧੀ / ਸਰਕਾਰੀ ਸਟੋਰ ਲੱਭੋ।',
@@ -383,11 +375,12 @@ const translations = {
         passwordShort: 'ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।', passwordsMismatch: 'ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ।', accountCreated: 'ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣ ਗਿਆ।',
         loginSuccess: 'ਲੌਗਇਨ ਸਫਲ ਰਿਹਾ।', logoutConfirm: 'MedicineCare ਤੋਂ ਲੌਗਆਉਟ ਕਰਨਾ ਹੈ?', hi: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ', languageSelector: 'ਭਾਸ਼ਾ ਚੁਣੋ', resultsFor: 'ਨਤੀਜੇ',
         allAvailable: 'ਸਾਰੀਆਂ ਦਵਾਈਆਂ', available: 'ਉਪਲਬਧ', showing: 'ਦਿਖਾਈਆਂ ਜਾ ਰਹੀਆਂ ਹਨ', medicines: 'ਦਵਾਈਆਂ', tabs: 'ਟੈਬ', brandedLabel: 'ਬ੍ਰਾਂਡਡ', directions: 'ਦਿਸ਼ਾ-ਨਿਰਦੇਸ਼',
-        viewDetails: 'ਵੇਰਵੇ ਵੇਖੋ', noMedicine: 'ਕੋਈ ਦਵਾਈ ਜਾਂ ਬਿਮਾਰੀ ਨਹੀਂ ਮਿਲੀ।', trySearching: 'ਖੋਜੋ'
+        viewDetails: 'ਵੇਰਵੇ ਵੇਖੋ', noMedicine: 'ਕੋਈ ਦਵਾਈ ਜਾਂ ਬਿਮਾਰੀ ਨਹੀਂ ਮਿਲੀ।', trySearching: 'ਖੋਜੋ', voiceSearch: 'ਵੌਇਸ ਖੋਜ',
+        voiceSearchUnsupported: 'ਇਸ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਵੌਇਸ ਖੋਜ ਸਮਰਥਿਤ ਨਹੀਂ ਹੈ।', voiceSearchError: 'ਵੌਇਸ ਖੋਜ ਪੂਰੀ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।',
+        voiceSearchPermissionDenied: 'ਮਾਈਕ੍ਰੋਫੋਨ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ ਮਿਲੀ। ਮਾਈਕ੍ਰੋਫੋਨ ਐਕਸੈਸ ਦੀ ਇਜਾਜ਼ਤ ਦੇ ਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।'
     }
 };
 
-// Generic medicine names are localized while strengths and units remain unchanged.
 const localizedMedicineNames = {
     hi: {
         Paracetamol: 'पैरासिटामोल', Ibuprofen: 'इबुप्रोफेन', Cetirizine: 'सेटिरीज़िन', Metformin: 'मेटफॉर्मिन',
@@ -581,6 +574,8 @@ function refreshDetailMedicineName() {
 
 let currentLanguage = localStorage.getItem('medicineCareLanguage') || 'en';
 
+medicinesData.forEach(medicine => getLocalizedMedicine(medicine));
+
 function changeLanguage(language) {
     if (!translations[language]) return;
     currentLanguage = language;
@@ -606,7 +601,100 @@ function changeLanguage(language) {
     if (typeof setAuthMode === 'function') setAuthMode(authMode, true);
 }
 
-// Frontend demo authentication. Replace this storage layer with an API in production.
+let activeVoiceRecognition = null;
+let voiceSearchStarting = false;
+
+function getSpeechRecognitionConstructor() {
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function showVoiceSearchError(message, error) {
+    if (error) console.error('Voice search error:', error);
+    alert(message);
+}
+
+async function requestMicrophonePermission() {
+    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+        return true;
+    }
+
+    if (!window.isSecureContext && window.location.protocol !== 'file:') {
+        showVoiceSearchError('Voice search requires HTTPS or localhost.');
+        return false;
+    }
+
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop());
+        return true;
+    } catch (error) {
+        const message = error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError'
+            ? translations[currentLanguage].voiceSearchPermissionDenied
+            : translations[currentLanguage].voiceSearchError;
+        showVoiceSearchError(message, error);
+        return false;
+    }
+}
+
+async function startVoiceSearch(inputId) {
+    const SpeechRecognition = getSpeechRecognitionConstructor();
+    const input = document.getElementById(inputId);
+    if (!input || voiceSearchStarting) return;
+
+    if (!SpeechRecognition) {
+        showVoiceSearchError(translations[currentLanguage].voiceSearchUnsupported);
+        return;
+    }
+
+    if (activeVoiceRecognition) {
+        activeVoiceRecognition.abort();
+        activeVoiceRecognition = null;
+    }
+
+    voiceSearchStarting = true;
+    const permissionGranted = await requestMicrophonePermission();
+    if (!permissionGranted) {
+        voiceSearchStarting = false;
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    const languageCodes = { en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN' };
+    const micButton = document.querySelector(`[data-voice-input="${inputId}"]`);
+    recognition.lang = languageCodes[currentLanguage] || 'en-IN';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    activeVoiceRecognition = recognition;
+    voiceSearchStarting = false;
+    micButton?.classList.add('listening');
+
+    recognition.onresult = event => {
+        const transcript = event.results[0][0].transcript.trim();
+        input.value = transcript;
+        executeSearch(inputId);
+    };
+    recognition.onerror = event => {
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            showVoiceSearchError(translations[currentLanguage].voiceSearchPermissionDenied, event.error);
+        } else if (event.error !== 'aborted' && event.error !== 'no-speech') {
+            showVoiceSearchError(translations[currentLanguage].voiceSearchError, event.error);
+        }
+    };
+    recognition.onend = () => {
+        micButton?.classList.remove('listening');
+        if (activeVoiceRecognition === recognition) activeVoiceRecognition = null;
+    };
+
+    try {
+        recognition.start();
+    } catch (error) {
+        micButton?.classList.remove('listening');
+        activeVoiceRecognition = null;
+        console.error('Unable to start voice search:', error);
+        showVoiceSearchError(translations[currentLanguage].voiceSearchError, error);
+    }
+}
+
 const AUTH_STORAGE_KEY = 'medicineCareUser';
 let authMode = 'login';
 
@@ -725,7 +813,6 @@ function submitAuth(event) {
     setTimeout(closeAuthModal, 700);
 }
 
-// Listen for Enter key press on inputs
 document.addEventListener('DOMContentLoaded', () => {
     renderMedicines();
     loadDefaultStoresFallback();
@@ -755,5 +842,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('search-page-input')?.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') executeSearch('search-page-input');
+    });
+
+    document.querySelectorAll('[data-voice-input]').forEach(button => {
+        button.addEventListener('click', () => startVoiceSearch(button.dataset.voiceInput));
     });
 });
