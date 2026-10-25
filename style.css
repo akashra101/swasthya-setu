@@ -93,6 +93,30 @@ body {
     gap: 8px;
 }
 
+.language-picker {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #0f766e;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.language-picker select {
+    border: 1px solid #ccfbf1;
+    border-radius: 8px;
+    background: #f0fdfa;
+    color: #0f766e;
+    padding: 7px 8px;
+    font: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+.language-picker select:focus {
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+}
+
 /* PAGES SYSTEM */
 .page {
     display: none;
@@ -339,6 +363,7 @@ footer { background: white; border-top: 1px solid #e2e8f0; text-align: center; p
 @media (max-width: 700px) {
     .navbar { padding: 0.85rem 4%; gap: 12px; }
     .nav-links { display: none; }
+    .language-picker select { max-width: 90px; }
     .login-btn { padding: 8px 10px; margin-left: auto; }
     .auth-dialog { padding: 24px 20px; border-radius: 20px; }
 }
