@@ -185,6 +185,21 @@ body {
 .search-box i { color: #94a3b8; margin-right: 10px; }
 .search-box input { border: none; outline: none; width: 100%; font-size: 0.95rem; color: #334155; }
 
+.mic-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    line-height: 1;
+}
+.mic-btn:hover, .mic-btn:focus-visible { background: #f1f5f9; color: #0d9488; }
+.mic-btn.listening { color: #dc2626; animation: pulse-mic 1s infinite; }
+@keyframes pulse-mic {
+    50% { opacity: 0.45; }
+}
+
 .search-btn {
     background: #0d9488;
     color: white;
