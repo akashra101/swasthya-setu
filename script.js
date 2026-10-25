@@ -264,7 +264,7 @@ function openDetails(name, brand, category, eng, jan, gov, save) {
 }
 
 // Frontend demo authentication. Replace this storage layer with an API in production.
-const AUTH_STORAGE_KEY = 'dawaiSahiUser';
+const AUTH_STORAGE_KEY = 'medicineCareUser';
 let authMode = 'login';
 
 function getStoredUser() {
@@ -355,7 +355,7 @@ function openAuthModal() {
 
 function handleAuthTrigger() {
     if (getStoredUser()) {
-        if (confirm('Logout from DawaiSahi?')) {
+        if (confirm('Logout from MedicineCare?')) {
             localStorage.removeItem(AUTH_STORAGE_KEY);
             updateAuthTrigger();
         }
