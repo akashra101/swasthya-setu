@@ -50,7 +50,8 @@
                     
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="home-search-input" data-i18n-placeholder="homeSearchPlaceholder" placeholder="Enter disease or medicine (e.g. Fever, Diabetes, Acidity)...">
+                        <input type="text" id="home-search-input" data-i18n-placeholder="homeSearchPlaceholder" placeholder="Enter disease or medicine...">
+                        <button type="button" class="mic-btn" aria-label="Voice search" data-i18n-aria-label="voiceSearch" title="Voice search" data-voice-input="home-search-input"><i class="fa-solid fa-microphone"></i></button>
                         <button class="search-btn" id="home-search-button" data-i18n="searchButton" onclick="executeSearch('home-search-input')">Search</button>
                     </div>
                 </div>
@@ -96,6 +97,7 @@
                 <div class="search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" id="search-page-input" data-i18n-placeholder="searchPlaceholder" placeholder="Search by disease, salt or medicine...">
+                    <button type="button" class="mic-btn" aria-label="Voice search" data-i18n-aria-label="voiceSearch" title="Voice search" data-voice-input="search-page-input"><i class="fa-solid fa-microphone"></i></button>
                     <button class="search-btn" data-i18n="searchButton" onclick="executeSearch('search-page-input')">Search</button>
                 </div>
                 <div class="filter-pills">
